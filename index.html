@@ -1590,8 +1590,11 @@
                 this.x = canvas.width + 200;
                 this.targetX = canvas.width / 2 - 150;
                 this.y = canvas.height - 400;
+                this.vy = 0; // Vertical velocity for jumping
+                this.vx = 0; // Horizontal velocity for movement
                 this.width = 300;
                 this.height = 350;
+                this.groundY = canvas.height - 60 - 350; // Ground level for boss
                 // More balanced health scaling: 30, 40, 50, 45, 50 (easier for levels 3-4)
                 const healthPerLevel = [30, 40, 50, 45, 50];
                 this.health = healthPerLevel[era] || (30 + era * 10);
@@ -1607,6 +1610,16 @@
                 this.deathTimer = 0;
                 this.stepTimer = 0;
                 this.introComplete = false;
+                this.isJumping = false;
+                this.jumpCooldown = 0;
+                this.moveTimer = 0;
+                this.moveDirection = 0;
+                this.chargeTimer = 0;
+                this.isCharging = false;
+                this.glowPulse = 0;
+                this.eyeGlow = 0;
+                this.auraSize = 0;
+                this.breathe = 0;
                 
                 // Boss names and types per era
                 this.bossData = [
@@ -1621,6 +1634,12 @@
             }
             
             update(player) {
+                // Update animation values
+                this.glowPulse = Math.sin(Date.now() / 200) * 0.3 + 0.7;
+                this.eyeGlow = Math.sin(Date.now() / 150) * 0.5 + 0.5;
+                this.breathe = Math.sin(Date.now() / 400) * 5;
+                this.auraSize = Math.sin(Date.now() / 300) * 20 + 80;
+                
                 if (this.dead) {
                     this.deathTimer++;
                     // Explosion particles during death
@@ -1674,17 +1693,83 @@
                 if (this.animTimer > 15) {
                     this.animFrame = (this.animFrame + 1) % 4;
                     this.animTimer = 0;
-                    if (this.animFrame === 0) {
+                    if (this.animFrame === 0 && !this.isJumping) {
                         sound.playBossStep();
                         screenShake = 5;
                     }
                 }
                 
+                // Boss movement AI
+                this.moveTimer++;
+                if (this.moveTimer > 60) {
+                    this.moveTimer = 0;
+                    // Decide movement: -1 = left, 0 = stay, 1 = right
+                    const distToPlayer = player.x - (this.x + this.width / 2);
+                    if (Math.abs(distToPlayer) > 300) {
+                        // Move toward player if far away
+                        this.moveDirection = distToPlayer > 0 ? 1 : -1;
+                    } else if (Math.abs(distToPlayer) < 100) {
+                        // Back up if too close
+                        this.moveDirection = distToPlayer > 0 ? -1 : 1;
+                    } else {
+                        // Random movement when at good range
+                        this.moveDirection = Math.random() > 0.5 ? (Math.random() > 0.5 ? 1 : -1) : 0;
+                    }
+                }
+                
+                // Apply horizontal movement (slower, lumbering movement)
+                const moveSpeed = 1.5 + this.era * 0.3;
+                this.x += this.moveDirection * moveSpeed;
+                
+                // Keep boss in bounds
+                this.x = Math.max(50, Math.min(canvas.width - this.width - 50, this.x));
+                
+                // Jump logic
+                this.jumpCooldown--;
+                if (this.jumpCooldown <= 0 && !this.isJumping) {
+                    // Jump toward player occasionally (more often at higher eras)
+                    const jumpChance = 0.005 + this.era * 0.002;
+                    if (Math.random() < jumpChance) {
+                        this.isJumping = true;
+                        this.vy = -15 - this.era * 2; // Jump strength increases with era
+                        this.jumpCooldown = 180 - this.era * 20; // Cooldown decreases with era
+                        sound.playBossRoar(this.era);
+                        screenShake = 12;
+                    }
+                }
+                
+                // Apply gravity when jumping
+                if (this.isJumping) {
+                    this.vy += 0.6; // Gravity
+                    this.y += this.vy;
+                    
+                    // Land on ground
+                    if (this.y >= this.groundY) {
+                        this.y = this.groundY;
+                        this.vy = 0;
+                        this.isJumping = false;
+                        screenShake = 20;
+                        sound.playBossStep();
+                        // Create landing shockwave
+                        for (let i = 0; i < 10; i++) {
+                            particles.push({
+                                x: this.x + this.width / 2 + (i - 5) * 30,
+                                y: canvas.height - 70,
+                                vx: (i - 5) * 3,
+                                vy: -3 - Math.random() * 3,
+                                life: 1,
+                                color: this.data.accent,
+                                size: 10 + Math.random() * 10
+                            });
+                        }
+                    }
+                }
+                
                 // Attack patterns
                 this.attackCooldown--;
-                if (this.attackCooldown <= 0) {
+                if (this.attackCooldown <= 0 && !this.isJumping) {
                     this.attack(player);
-                    this.attackCooldown = 120 - this.era * 15;
+                    this.attackCooldown = 150 - this.era * 15; // Slightly slower attacks
                     this.attackPattern = (this.attackPattern + 1) % 3;
                 }
                 
@@ -1782,9 +1867,18 @@
             draw(ctx) {
                 const shake = this.hitFlash > 0 ? (Math.random() - 0.5) * 10 : 0;
                 
+                // Draw impressive aura behind boss
+                this.drawBossAura(ctx);
+                
                 ctx.save();
                 ctx.translate(this.x + this.width / 2 + shake, this.y + this.height / 2);
                 if (this.facing === 1) ctx.scale(-1, 1);
+                
+                // Squash and stretch when jumping
+                if (this.isJumping) {
+                    const stretchFactor = 1 + Math.abs(this.vy) * 0.01;
+                    ctx.scale(1 / stretchFactor, stretchFactor);
+                }
                 
                 if (this.dead) {
                     ctx.globalAlpha = 1 - (this.deathTimer / 180);
@@ -1812,8 +1906,80 @@
                 this.drawBossBody(ctx);
                 ctx.restore();
                 
+                // Draw shadow under boss
+                this.drawBossShadow(ctx);
+                
                 if (this.phase === 1 && !this.dead) this.drawHealthBar(ctx);
                 if (!this.introComplete && this.phase === 0) this.drawIntro(ctx);
+            }
+            
+            drawBossAura(ctx) {
+                const centerX = this.x + this.width / 2;
+                const centerY = this.y + this.height / 2;
+                
+                ctx.save();
+                
+                // Pulsing energy aura
+                const auraRadius = this.auraSize + (this.isJumping ? 40 : 0);
+                const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, auraRadius);
+                gradient.addColorStop(0, this.data.accent + '40');
+                gradient.addColorStop(0.5, this.data.accent + '20');
+                gradient.addColorStop(1, this.data.accent + '00');
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, auraRadius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Rotating energy rings
+                ctx.strokeStyle = this.data.accent + '60';
+                ctx.lineWidth = 3;
+                for (let i = 0; i < 3; i++) {
+                    const ringRadius = 100 + i * 40 + Math.sin(Date.now() / 300 + i) * 10;
+                    const rotation = Date.now() / (1000 + i * 500);
+                    ctx.save();
+                    ctx.translate(centerX, centerY);
+                    ctx.rotate(rotation * (i % 2 ? 1 : -1));
+                    ctx.beginPath();
+                    ctx.arc(0, 0, ringRadius, 0, Math.PI * 0.5);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.arc(0, 0, ringRadius, Math.PI, Math.PI * 1.5);
+                    ctx.stroke();
+                    ctx.restore();
+                }
+                
+                // Floating particles around boss
+                ctx.fillStyle = this.data.accent;
+                for (let i = 0; i < 8; i++) {
+                    const angle = Date.now() / 800 + i * Math.PI / 4;
+                    const radius = 120 + Math.sin(Date.now() / 400 + i) * 30;
+                    const px = centerX + Math.cos(angle) * radius;
+                    const py = centerY + Math.sin(angle) * radius * 0.6;
+                    const size = 4 + Math.sin(Date.now() / 200 + i) * 2;
+                    ctx.beginPath();
+                    ctx.arc(px, py, size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                ctx.restore();
+            }
+            
+            drawBossShadow(ctx) {
+                const shadowY = canvas.height - 65;
+                const shadowScale = Math.max(0.5, 1 - (shadowY - (this.y + this.height)) / 300);
+                
+                ctx.save();
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+                ctx.beginPath();
+                ctx.ellipse(
+                    this.x + this.width / 2,
+                    shadowY,
+                    this.width / 2 * shadowScale,
+                    20 * shadowScale,
+                    0, 0, Math.PI * 2
+                );
+                ctx.fill();
+                ctx.restore();
             }
             
             drawBossBody(ctx) {
@@ -5860,25 +6026,25 @@
                         const hy = canvas.height - 250 - (i % 3) * 50;
                         collectibles.push(new Collectible(hx, hy, 'health'));
                     }
-                    
-                    // Remove most jumping platforms for cleaner boss arena
-                    platforms = platforms.filter(p => {
-                        // Keep ground platform and low platforms only
-                        return p.y >= canvas.height - 100 || p.isHill;
-                    });
-                    
-                    // Add protective walls/cover for player to hide behind
-                    // Left wall/barrier
-                    platforms.push(new Platform(80, canvas.height - 180, 30, 120, false, false));
-                    // Center barrier
-                    platforms.push(new Platform(350, canvas.height - 150, 40, 90, false, false));
-                    // Right barrier  
-                    platforms.push(new Platform(620, canvas.height - 160, 35, 100, false, false));
-                    
-                    // Add just 2 simple platforms for maneuvering (not too high)
-                    platforms.push(new Platform(180, canvas.height - 140, 100, 20, false, false));
-                    platforms.push(new Platform(500, canvas.height - 130, 100, 20, false, false));
                 }
+                
+                // Remove most jumping platforms for cleaner boss arena (ALL LEVELS)
+                platforms = platforms.filter(p => {
+                    // Keep only ground platform and hills
+                    return p.y >= canvas.height - 80 || p.isHill;
+                });
+                
+                // Add protective walls/cover for player to hide behind
+                // Left wall/barrier
+                platforms.push(new Platform(80, canvas.height - 180, 30, 120, false, false));
+                // Center barrier
+                platforms.push(new Platform(380, canvas.height - 140, 40, 80, false, false));
+                // Right barrier  
+                platforms.push(new Platform(650, canvas.height - 160, 35, 100, false, false));
+                
+                // Add just 2 simple low platforms for maneuvering
+                platforms.push(new Platform(200, canvas.height - 130, 100, 18, false, false));
+                platforms.push(new Platform(500, canvas.height - 120, 100, 18, false, false));
             }
             
             // Respawn powerups during long boss fights (every 15 seconds if none left)
