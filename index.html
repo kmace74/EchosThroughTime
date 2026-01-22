@@ -1592,7 +1592,9 @@
                 this.y = canvas.height - 400;
                 this.width = 300;
                 this.height = 350;
-                this.health = 30 + era * 15;
+                // More balanced health scaling: 30, 40, 50, 45, 50 (easier for levels 3-4)
+                const healthPerLevel = [30, 40, 50, 45, 50];
+                this.health = healthPerLevel[era] || (30 + era * 10);
                 this.maxHealth = this.health;
                 this.phase = 0; // 0: entering, 1: fighting, 2: dying
                 this.attackCooldown = 0;
@@ -4262,6 +4264,24 @@
                             ctx.shadowBlur = 0;
                             break;
                     }
+                    
+                    // Health pickup (special type)
+                    if (this.type === 'health') {
+                        ctx.fillStyle = '#ff4444';
+                        ctx.shadowColor = '#ff0000';
+                        ctx.shadowBlur = 15;
+                        // Heart shape
+                        ctx.beginPath();
+                        ctx.moveTo(0, 4);
+                        ctx.bezierCurveTo(-10, -6, -12, -12, 0, -14);
+                        ctx.bezierCurveTo(12, -12, 10, -6, 0, 4);
+                        ctx.fill();
+                        // Plus sign
+                        ctx.fillStyle = '#fff';
+                        ctx.fillRect(-5, -8, 10, 3);
+                        ctx.fillRect(-1.5, -11, 3, 9);
+                        ctx.shadowBlur = 0;
+                    }
                 }
                 
                 ctx.restore();
@@ -5821,6 +5841,71 @@
                 player.x = 100;
                 cameraX = 0;
                 sound.stopMusic();
+                
+                // Spawn powerups for boss fight (more for harder levels)
+                powerups = []; // Clear any remaining powerups
+                const bossPowerupCount = 2 + currentLevel; // 2 for level 0, up to 6 for level 4
+                
+                for (let i = 0; i < bossPowerupCount; i++) {
+                    const px = 150 + (i * (canvas.width - 300) / bossPowerupCount);
+                    const py = canvas.height - 200 - (i % 3) * 80; // Stagger heights
+                    powerups.push(new Powerup(px, py, currentLevel));
+                }
+                
+                // Extra health pickup for levels 3 and 4 (Near Future and Far Future)
+                if (currentLevel >= 3) {
+                    // Spawn MORE health collectibles during boss fight - 6 hearts!
+                    for (let i = 0; i < 6; i++) {
+                        const hx = 100 + i * 130;
+                        const hy = canvas.height - 250 - (i % 3) * 50;
+                        collectibles.push(new Collectible(hx, hy, 'health'));
+                    }
+                    
+                    // Remove most jumping platforms for cleaner boss arena
+                    platforms = platforms.filter(p => {
+                        // Keep ground platform and low platforms only
+                        return p.y >= canvas.height - 100 || p.isHill;
+                    });
+                    
+                    // Add protective walls/cover for player to hide behind
+                    // Left wall/barrier
+                    platforms.push(new Platform(80, canvas.height - 180, 30, 120, false, false));
+                    // Center barrier
+                    platforms.push(new Platform(350, canvas.height - 150, 40, 90, false, false));
+                    // Right barrier  
+                    platforms.push(new Platform(620, canvas.height - 160, 35, 100, false, false));
+                    
+                    // Add just 2 simple platforms for maneuvering (not too high)
+                    platforms.push(new Platform(180, canvas.height - 140, 100, 20, false, false));
+                    platforms.push(new Platform(500, canvas.height - 130, 100, 20, false, false));
+                }
+            }
+            
+            // Respawn powerups during long boss fights (every 15 seconds if none left)
+            if (levelBoss && !levelBoss.dead && levelBoss.phase === 1) {
+                if (!this.bossPowerupTimer) this.bossPowerupTimer = 0;
+                if (!this.bossHealthTimer) this.bossHealthTimer = 0;
+                this.bossPowerupTimer++;
+                this.bossHealthTimer++;
+                
+                if (this.bossPowerupTimer >= 900 && powerups.length === 0) { // 15 seconds at 60fps
+                    this.bossPowerupTimer = 0;
+                    // Spawn a new powerup
+                    const px = 200 + Math.random() * (canvas.width - 400);
+                    const py = canvas.height - 250 - Math.random() * 100;
+                    powerups.push(new Powerup(px, py, currentLevel));
+                }
+                
+                // Spawn health every 10 seconds for hard levels (levels 3 and 4)
+                if (currentLevel >= 3 && this.bossHealthTimer >= 600) { // 10 seconds
+                    this.bossHealthTimer = 0;
+                    // Spawn 2 health pickups
+                    for (let i = 0; i < 2; i++) {
+                        const hx = 100 + Math.random() * (canvas.width - 200);
+                        const hy = canvas.height - 180 - Math.random() * 60;
+                        collectibles.push(new Collectible(hx, hy, 'health'));
+                    }
+                }
             }
             
             // Update boss
@@ -6036,6 +6121,29 @@
                         updateKeysUI();
                         sound.playCollect(true);
                         createParticle(c.x, c.y, '#ffd700', 20);
+                    } else if (c.type === 'health') {
+                        // Health pickup - restore 1 health
+                        if (player.health < player.maxHealth) {
+                            player.health++;
+                            updateHealthUI();
+                            sound.playCollect(true);
+                            createParticle(c.x, c.y, '#ff4444', 15);
+                            // Floating text
+                            floatingTexts.push({
+                                x: c.x,
+                                y: c.y,
+                                text: '+1 HEALTH',
+                                life: 1,
+                                vy: -2,
+                                color: '#ff4444'
+                            });
+                        } else {
+                            // Already full health - give score instead
+                            score += 100;
+                            updateScoreUI();
+                            sound.playCollect(false);
+                            createParticle(c.x, c.y, '#ff4444', 8);
+                        }
                     } else {
                         score += 50;
                         updateScoreUI();
