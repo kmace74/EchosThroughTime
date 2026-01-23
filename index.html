@@ -58,6 +58,13 @@
         }
         
         /* Era-specific UI themes */
+        /* Prehistoric Eras */
+        .era-dino .ui-panel { border-color: #7cb342; background: rgba(45,74,29,0.85); font-family: 'Arial', sans-serif; }
+        .era-ice .ui-panel { border-color: #4fc3f7; background: rgba(168,200,216,0.85); font-family: 'Arial', sans-serif; color: #1a3a4a; }
+        .era-egypt .ui-panel { border-color: #ffd700; background: rgba(210,180,140,0.85); font-family: 'Cinzel', serif; color: #3a2a1a; }
+        .era-greece .ui-panel { border-color: #ffffff; background: rgba(91,155,213,0.85); font-family: 'Cinzel', serif; }
+        .era-viking .ui-panel { border-color: #c0c0c0; background: rgba(58,74,90,0.85); font-family: 'Cinzel', serif; }
+        /* Historical Eras */
         .era-1500 .ui-panel { border-color: #8B4513; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%231a1008' width='100' height='100'/%3E%3C/svg%3E"), rgba(30,20,10,0.85); font-family: 'Cinzel', serif; }
         .era-1700 .ui-panel { border-color: #4a6fa5; background: rgba(20,30,45,0.85); font-family: 'Playfair Display', serif; }
         .era-1900 .ui-panel { border-color: #cd7f32; background: rgba(35,25,20,0.85); font-family: 'Rajdhani', sans-serif; }
@@ -191,9 +198,11 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
+            padding-top: 15vh;
             z-index: 100;
             transition: opacity 0.5s;
+            box-sizing: border-box;
         }
         
         .screen.hidden {
@@ -203,6 +212,54 @@
         
         #titleScreen {
             background: linear-gradient(180deg, #0d0d1a 0%, #1a1a3a 50%, #2a1a2a 100%);
+            overflow: hidden;
+            justify-content: flex-start;
+            padding-top: 10vh;
+        }
+        
+        #titleScreen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(124,179,66,0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(79,195,247,0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(188,140,255,0.1) 0%, transparent 60%);
+            animation: menuPulse 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes menuPulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+        
+        #titleScreen::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,215,0,0.2), transparent),
+                radial-gradient(2px 2px at 50px 160px, rgba(255,255,255,0.3), transparent),
+                radial-gradient(2px 2px at 90px 40px, rgba(188,140,255,0.3), transparent),
+                radial-gradient(2px 2px at 130px 80px, rgba(255,255,255,0.2), transparent),
+                radial-gradient(2px 2px at 160px 120px, rgba(79,195,247,0.3), transparent);
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: starFloat 20s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes starFloat {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-200px); }
         }
         
         #titleScreen h1 {
@@ -213,13 +270,38 @@
             margin-bottom: 10px;
             text-align: center;
             letter-spacing: 4px;
+            position: relative;
+            z-index: 1;
         }
         
         #titleScreen .subtitle {
             font-size: clamp(14px, 3vw, 20px);
             color: #aaa;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
             letter-spacing: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        #titleScreen .menu-btn {
+            position: relative;
+            z-index: 1;
+            min-width: 250px;
+            margin: 15px;
+        }
+        
+        #titleScreen .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 60px;
+        }
+        
+        #titleScreen .instructions {
+            position: relative;
+            z-index: 1;
+            margin-top: 40px;
         }
         
         .menu-btn {
@@ -256,14 +338,14 @@
         .level-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 15px;
             justify-content: center;
-            max-width: 600px;
+            max-width: 700px;
         }
         
         .level-btn {
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
             background: linear-gradient(180deg, #2a2a4a 0%, #1a1a3a 100%);
             border: 2px solid #555;
             display: flex;
@@ -272,6 +354,12 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s;
+            font-size: 12px;
+        }
+        
+        .level-btn .year {
+            font-size: 10px;
+            opacity: 0.8;
         }
         
         .level-btn.unlocked {
@@ -432,17 +520,19 @@
         <!-- Title Screen -->
         <div class="screen" id="titleScreen">
             <h1>ECHOES THROUGH TIME</h1>
-            <div class="subtitle">A JOURNEY ACROSS 800 YEARS</div>
-            <button class="menu-btn" id="startBtn">BEGIN JOURNEY</button>
-            <button class="menu-btn" id="selectBtn">SELECT ERA</button>
+            <div class="subtitle">A JOURNEY ACROSS 65 MILLION YEARS</div>
+            <div class="button-container">
+                <button class="menu-btn" id="startBtn">BEGIN JOURNEY</button>
+                <button class="menu-btn" id="selectBtn">SELECT ERA</button>
+            </div>
             <div class="instructions">
-                <span>← → or A/D to move | ↓ or S to crouch | SPACE to jump (double jump!)</span>
+                <span>← → or A/D to move | ↓ or S to crouch (slide downhill!) | SPACE to jump</span>
                 <span>J to attack | K to throw tennis ball | P to pause</span>
             </div>
             <div class="instructions" style="margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2);">
                 <span style="color: #00ff00;">🎮 GAMEPAD CONTROLS</span>
                 <span>Left Stick/D-Pad: Move | A: Jump | X/Y/RT: Attack | B/RB: Tennis Ball</span>
-                <span>LB: Shield | Start: Pause | Down: Crouch</span>
+                <span>LB: Shield | Start: Pause | Down: Crouch/Slide</span>
             </div>
         </div>
         
@@ -1042,48 +1132,107 @@
             playMenuMusicLoop() {
                 if (!this.menuMusicPlaying || !this.initialized) return;
                 
-                // Epic orchestral menu theme
+                // "Echoes Through Time" inspired menu theme
+                // Deep temporal drone representing the flow of time
                 const now = this.ctx.currentTime;
                 
-                // Deep bass drone
-                this.playMusicTone(55, 8, 'sine', 0.15);
-                this.playMusicTone(110, 8, 'triangle', 0.08);
+                // Time flowing bass drone
+                this.playMusicTone(36.71, 12, 'sine', 0.12);      // D1 - deep time
+                this.playMusicTone(73.42, 12, 'triangle', 0.08);   // D2 - octave
+                this.playMusicTone(55, 12, 'sine', 0.06);          // A1 - fifth
                 
-                // Slow majestic chord progression
-                const chords = [
-                    [130.81, 164.81, 196],      // C major
-                    [146.83, 174.61, 220],      // D minor  
-                    [164.81, 196, 246.94],      // E minor
-                    [130.81, 164.81, 196],      // C major
+                // Ethereal "echoes" - delayed reverberating notes
+                const echoNotes = [293.66, 349.23, 440, 523.25, 587.33];
+                echoNotes.forEach((freq, i) => {
+                    setTimeout(() => {
+                        if (this.menuMusicPlaying) {
+                            // Main note
+                            this.playMusicTone(freq, 2.5, 'sine', 0.04);
+                            // Echo 1
+                            setTimeout(() => this.menuMusicPlaying && this.playMusicTone(freq, 2, 'sine', 0.025), 300);
+                            // Echo 2
+                            setTimeout(() => this.menuMusicPlaying && this.playMusicTone(freq, 1.5, 'sine', 0.015), 600);
+                            // Echo 3 (faint)
+                            setTimeout(() => this.menuMusicPlaying && this.playMusicTone(freq, 1, 'sine', 0.008), 900);
+                        }
+                    }, i * 2200);
+                });
+                
+                // Time-warp whoosh sounds (periodic)
+                setTimeout(() => {
+                    if (this.menuMusicPlaying) {
+                        this.playTimeWhoosh();
+                    }
+                }, 3000);
+                
+                setTimeout(() => {
+                    if (this.menuMusicPlaying) {
+                        this.playTimeWhoosh();
+                    }
+                }, 9000);
+                
+                // Mysterious chord progression representing different eras
+                const eraChords = [
+                    [146.83, 174.61, 220],      // D minor - prehistoric mystery
+                    [164.81, 196, 246.94],      // E minor - ancient civilizations
+                    [174.61, 220, 261.63],      // F major - medieval wonder
+                    [196, 246.94, 293.66],      // G major - industrial progress
+                    [220, 277.18, 329.63],      // A minor - future uncertainty
                 ];
                 
-                chords.forEach((chord, i) => {
+                eraChords.forEach((chord, i) => {
                     setTimeout(() => {
                         if (this.menuMusicPlaying) {
                             chord.forEach(freq => {
-                                this.playMusicTone(freq, 1.8, 'sine', 0.06);
-                                this.playMusicTone(freq * 2, 1.5, 'triangle', 0.03);
+                                this.playMusicTone(freq, 2.2, 'sine', 0.05);
+                                this.playMusicTone(freq * 2, 1.8, 'triangle', 0.02);
                             });
                         }
-                    }, i * 2000);
+                    }, i * 2400 + 500);
                 });
                 
-                // Ethereal high notes
+                // High crystalline "time crystal" sounds
                 setTimeout(() => {
                     if (this.menuMusicPlaying) {
-                        this.playMusicTone(523.25, 3, 'sine', 0.04);
-                        this.playMusicTone(659.25, 2.5, 'sine', 0.03);
+                        this.playMusicTone(1046.5, 0.5, 'sine', 0.02);
+                        this.playMusicTone(1318.5, 0.4, 'sine', 0.015);
                     }
-                }, 1000);
+                }, 1500);
                 
                 setTimeout(() => {
                     if (this.menuMusicPlaying) {
-                        this.playMusicTone(587.33, 3, 'sine', 0.04);
-                        this.playMusicTone(783.99, 2.5, 'sine', 0.03);
+                        this.playMusicTone(1174.7, 0.5, 'sine', 0.02);
+                        this.playMusicTone(1396.9, 0.4, 'sine', 0.015);
                     }
-                }, 5000);
+                }, 7500);
                 
-                this.currentMusic = setTimeout(() => this.playMenuMusicLoop(), 8000);
+                this.currentMusic = setTimeout(() => this.playMenuMusicLoop(), 12000);
+            }
+            
+            playTimeWhoosh() {
+                if (!this.initialized) return;
+                // Sweeping time-warp sound effect
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.connect(gain);
+                gain.connect(this.masterGain);
+                
+                osc.type = 'sine';
+                const now = this.ctx.currentTime;
+                
+                // Frequency sweep (low to high, like traveling through time)
+                osc.frequency.setValueAtTime(80, now);
+                osc.frequency.exponentialRampToValueAtTime(400, now + 0.8);
+                osc.frequency.exponentialRampToValueAtTime(100, now + 1.5);
+                
+                // Volume envelope
+                gain.gain.setValueAtTime(0, now);
+                gain.gain.linearRampToValueAtTime(0.04, now + 0.3);
+                gain.gain.linearRampToValueAtTime(0.02, now + 0.8);
+                gain.gain.linearRampToValueAtTime(0, now + 1.5);
+                
+                osc.start(now);
+                osc.stop(now + 1.5);
             }
             
             startEraMusic(era = 0) {
@@ -1093,12 +1242,191 @@
                 this.menuMusicPlaying = false;
                 
                 switch(era) {
-                    case 0: this.playRenaissanceMusic(); break;
-                    case 1: this.playColonialMusic(); break;
-                    case 2: this.playIndustrialMusic(); break;
-                    case 3: this.playFutureMusic(); break;
-                    case 4: this.playFarFutureMusic(); break;
+                    // Prehistoric eras
+                    case 0: this.playDinosaurMusic(); break;
+                    case 1: this.playIceAgeMusic(); break;
+                    case 2: this.playEgyptMusic(); break;
+                    case 3: this.playGreeceMusic(); break;
+                    case 4: this.playVikingMusic(); break;
+                    // Historical eras
+                    case 5: this.playRenaissanceMusic(); break;
+                    case 6: this.playColonialMusic(); break;
+                    case 7: this.playIndustrialMusic(); break;
+                    case 8: this.playFutureMusic(); break;
+                    case 9: this.playFarFutureMusic(); break;
                 }
+            }
+            
+            // Dinosaur Age - Primal drums, low rumbles, prehistoric atmosphere
+            playDinosaurMusic() {
+                if (!this.musicPlaying || !this.initialized) return;
+                
+                // Deep primordial drone
+                this.playMusicTone(36.71, 8, 'sine', 0.15);
+                this.playMusicTone(55, 8, 'triangle', 0.1);
+                
+                // Tribal drums pattern
+                const drumTimes = [0, 400, 600, 1200, 1400, 1800, 2400, 2600];
+                drumTimes.forEach(time => {
+                    setTimeout(() => {
+                        if (this.musicPlaying) {
+                            this.playMusicTone(80, 0.3, 'triangle', 0.2);
+                            this.playMusicTone(60, 0.4, 'sine', 0.15);
+                        }
+                    }, time);
+                });
+                
+                // Mysterious jungle sounds
+                setTimeout(() => {
+                    if (this.musicPlaying) {
+                        this.playMusicTone(220, 1.5, 'sine', 0.04);
+                        this.playMusicTone(277.18, 1.2, 'sine', 0.03);
+                    }
+                }, 3000);
+                
+                // Dinosaur-like rumble
+                setTimeout(() => {
+                    if (this.musicPlaying) {
+                        this.playMusicTone(40, 2, 'sawtooth', 0.08);
+                    }
+                }, 5000);
+                
+                this.currentMusic = setTimeout(() => this.playDinosaurMusic(), 8000);
+            }
+            
+            // Ice Age - Cold, sparse, wind-like sounds
+            playIceAgeMusic() {
+                if (!this.musicPlaying || !this.initialized) return;
+                
+                // Icy wind drone
+                this.playMusicTone(130.81, 10, 'sine', 0.08);
+                this.playMusicTone(196, 10, 'triangle', 0.05);
+                
+                // Sparse crystalline notes
+                const iceNotes = [523.25, 659.25, 783.99, 659.25, 523.25];
+                iceNotes.forEach((freq, i) => {
+                    setTimeout(() => {
+                        if (this.musicPlaying) {
+                            this.playMusicTone(freq, 1.5, 'sine', 0.05);
+                            this.playMusicTone(freq * 1.5, 1, 'sine', 0.02);
+                        }
+                    }, i * 1500 + 500);
+                });
+                
+                // Low mammoth call
+                setTimeout(() => {
+                    if (this.musicPlaying) {
+                        this.playMusicTone(65.41, 2, 'sawtooth', 0.06);
+                        this.playMusicTone(82.41, 1.5, 'triangle', 0.04);
+                    }
+                }, 4000);
+                
+                this.currentMusic = setTimeout(() => this.playIceAgeMusic(), 10000);
+            }
+            
+            // Ancient Egypt - Exotic scales, mystical atmosphere
+            playEgyptMusic() {
+                if (!this.musicPlaying || !this.initialized) return;
+                
+                // Egyptian drone (D with flat 2nd)
+                this.playMusicTone(73.42, 8, 'sine', 0.1);
+                this.playMusicTone(146.83, 8, 'triangle', 0.06);
+                
+                // Egyptian scale melody (D Phrygian dominant)
+                const egyptScale = [293.66, 311.13, 369.99, 392, 440, 466.16, 523.25, 466.16, 440, 392];
+                egyptScale.forEach((freq, i) => {
+                    setTimeout(() => {
+                        if (this.musicPlaying) {
+                            this.playMusicTone(freq, 0.5, 'sine', 0.08);
+                            this.playMusicTone(freq * 0.5, 0.4, 'triangle', 0.04);
+                        }
+                    }, i * 400);
+                });
+                
+                // Mystical shimmer
+                setTimeout(() => {
+                    if (this.musicPlaying) {
+                        this.playMusicTone(880, 2, 'sine', 0.03);
+                        this.playMusicTone(1108.73, 1.5, 'sine', 0.02);
+                    }
+                }, 2000);
+                
+                this.currentMusic = setTimeout(() => this.playEgyptMusic(), 8000);
+            }
+            
+            // Ancient Greece - Lyrical, heroic modes
+            playGreeceMusic() {
+                if (!this.musicPlaying || !this.initialized) return;
+                
+                // Lyre drone
+                this.playMusicTone(110, 8, 'triangle', 0.08);
+                this.playMusicTone(164.81, 8, 'sine', 0.05);
+                
+                // Greek Dorian mode melody
+                const greekMelody = [329.63, 349.23, 392, 440, 392, 349.23, 329.63, 293.66, 329.63];
+                greekMelody.forEach((freq, i) => {
+                    setTimeout(() => {
+                        if (this.musicPlaying) {
+                            this.playMusicTone(freq, 0.6, 'triangle', 0.1);
+                        }
+                    }, i * 450);
+                });
+                
+                // Heroic brass-like fanfare
+                setTimeout(() => {
+                    if (this.musicPlaying) {
+                        this.playMusicTone(261.63, 1, 'sawtooth', 0.06);
+                        this.playMusicTone(329.63, 0.8, 'sawtooth', 0.05);
+                        this.playMusicTone(392, 0.6, 'sawtooth', 0.04);
+                    }
+                }, 4500);
+                
+                this.currentMusic = setTimeout(() => this.playGreeceMusic(), 8000);
+            }
+            
+            // Viking Age - Norse, epic, war drums
+            playVikingMusic() {
+                if (!this.musicPlaying || !this.initialized) return;
+                
+                // Dark Norse drone
+                this.playMusicTone(55, 8, 'sawtooth', 0.08);
+                this.playMusicTone(82.41, 8, 'triangle', 0.06);
+                
+                // War drums
+                const warDrums = [0, 500, 750, 1500, 2000, 2250, 3000, 3500];
+                warDrums.forEach(time => {
+                    setTimeout(() => {
+                        if (this.musicPlaying) {
+                            this.playMusicTone(60, 0.4, 'triangle', 0.18);
+                            this.playMusicTone(90, 0.3, 'sine', 0.1);
+                        }
+                    }, time);
+                });
+                
+                // Viking horn call
+                setTimeout(() => {
+                    if (this.musicPlaying) {
+                        this.playMusicTone(130.81, 1.5, 'sawtooth', 0.1);
+                        this.playMusicTone(164.81, 1.2, 'sawtooth', 0.08);
+                        this.playMusicTone(196, 1, 'sawtooth', 0.06);
+                    }
+                }, 4000);
+                
+                // Nordic melody (minor, heroic)
+                setTimeout(() => {
+                    if (this.musicPlaying) {
+                        const norseMelody = [220, 246.94, 261.63, 293.66, 261.63, 246.94, 220];
+                        norseMelody.forEach((freq, i) => {
+                            setTimeout(() => {
+                                if (this.musicPlaying) {
+                                    this.playMusicTone(freq, 0.5, 'triangle', 0.08);
+                                }
+                            }, i * 350);
+                        });
+                    }
+                }, 5500);
+                
+                this.currentMusic = setTimeout(() => this.playVikingMusic(), 8000);
             }
             
             // 1500s - Renaissance: Lute-like arpeggios, modal melodies
@@ -1418,9 +1746,20 @@
         const sound = new SoundEngine();
         
         // Initialize sound on first user interaction
-        document.addEventListener('click', () => { sound.init(); sound.startMenuMusic(); }, { once: true });
-        document.addEventListener('keydown', () => { sound.init(); sound.startMenuMusic(); }, { once: true });
-        document.addEventListener('touchstart', () => { sound.init(); sound.startMenuMusic(); }, { once: true });
+        let soundInitialized = false;
+        function initSoundOnInteraction() {
+            if (!soundInitialized) {
+                sound.init();
+                soundInitialized = true;
+            }
+            if (state === GameState.MENU && !sound.menuMusicPlaying) {
+                sound.startMenuMusic();
+            }
+        }
+        
+        document.addEventListener('click', initSoundOnInteraction);
+        document.addEventListener('keydown', initSoundOnInteraction);
+        document.addEventListener('touchstart', initSoundOnInteraction);
         
         // Responsive canvas
         function resizeCanvas() {
@@ -1448,7 +1787,7 @@
         let score = 0;
         let lives = 3;
         let keysCollected = 0;
-        let unlockedLevels = JSON.parse(localStorage.getItem('echoesUnlocked')) || [true, false, false, false, false];
+        let unlockedLevels = JSON.parse(localStorage.getItem('echoesUnlocked')) || [true, false, false, false, false, false, false, false, false, false];
         
         // Boss system
         let levelBoss = null;
@@ -1463,6 +1802,123 @@
         // ============================================
         
         const ERAS = [
+            // === PREHISTORIC ERAS (NEW!) ===
+            {
+                year: -65000000,
+                name: "Dinosaur Age",
+                theme: "era-dino",
+                colors: {
+                    sky: ['#2d4a1d', '#3d5a2d', '#4d6a3d'],
+                    ground: '#2a3d1a',
+                    accent: '#7cb342',
+                    platform: '#3d4a2a'
+                },
+                maxHealth: 3,
+                enemySpeed: 1.2,
+                platformCount: 6,
+                abilities: ['attack'],
+                character: {
+                    name: 'Time Traveler',
+                    color: '#6b5b4f',
+                    accent: '#8b7355',
+                    weapon: 'spear'
+                },
+                enemies: ['raptor', 'pterodactyl'],
+                collectibles: ['egg', 'fossil', 'bone']
+            },
+            {
+                year: -10000,
+                name: "Ice Age",
+                theme: "era-ice",
+                colors: {
+                    sky: ['#a8c8d8', '#b8d8e8', '#c8e8f8'],
+                    ground: '#e8f0f8',
+                    accent: '#4fc3f7',
+                    platform: '#b0c4d8'
+                },
+                maxHealth: 3,
+                enemySpeed: 1.3,
+                platformCount: 7,
+                abilities: ['attack'],
+                character: {
+                    name: 'Caveman Hunter',
+                    color: '#8b7355',
+                    accent: '#a08060',
+                    weapon: 'club'
+                },
+                enemies: ['mammoth', 'sabertooth'],
+                collectibles: ['fur', 'tusk', 'ice_crystal']
+            },
+            {
+                year: -3000,
+                name: "Ancient Egypt",
+                theme: "era-egypt",
+                colors: {
+                    sky: ['#f4a460', '#daa520', '#cd853f'],
+                    ground: '#d2b48c',
+                    accent: '#ffd700',
+                    platform: '#c4a574'
+                },
+                maxHealth: 4,
+                enemySpeed: 1.4,
+                platformCount: 7,
+                abilities: ['attack'],
+                character: {
+                    name: 'Desert Nomad',
+                    color: '#d4a574',
+                    accent: '#ffd700',
+                    weapon: 'khopesh'
+                },
+                enemies: ['mummy', 'scarab'],
+                collectibles: ['ankh', 'scarab_gem', 'gold_coin']
+            },
+            {
+                year: -500,
+                name: "Ancient Greece",
+                theme: "era-greece",
+                colors: {
+                    sky: ['#5b9bd5', '#6ba5dd', '#7bafe5'],
+                    ground: '#c9b896',
+                    accent: '#ffffff',
+                    platform: '#a89878'
+                },
+                maxHealth: 4,
+                enemySpeed: 1.5,
+                platformCount: 8,
+                abilities: ['attack'],
+                character: {
+                    name: 'Spartan Warrior',
+                    color: '#8b0000',
+                    accent: '#ffd700',
+                    weapon: 'sword'
+                },
+                enemies: ['minotaur', 'harpy'],
+                collectibles: ['olive', 'amphora', 'laurel']
+            },
+            {
+                year: 800,
+                name: "Viking Age",
+                theme: "era-viking",
+                colors: {
+                    sky: ['#3a4a5a', '#4a5a6a', '#5a6a7a'],
+                    ground: '#2a3a2a',
+                    accent: '#c0c0c0',
+                    platform: '#4a5a4a'
+                },
+                maxHealth: 5,
+                enemySpeed: 1.6,
+                platformCount: 8,
+                abilities: ['attack'],
+                character: {
+                    name: 'Viking Berserker',
+                    color: '#5a4a3a',
+                    accent: '#c0c0c0',
+                    weapon: 'axe'
+                },
+                enemies: ['draugr', 'wolf'],
+                collectibles: ['rune', 'mead', 'silver']
+            },
+            // === ORIGINAL ERAS ===
             {
                 year: 1500,
                 name: "Renaissance",
@@ -1595,9 +2051,9 @@
                 this.width = 300;
                 this.height = 350;
                 this.groundY = canvas.height - 60 - 350; // Ground level for boss
-                // More balanced health scaling: 30, 40, 50, 45, 50 (easier for levels 3-4)
-                const healthPerLevel = [30, 40, 50, 45, 50];
-                this.health = healthPerLevel[era] || (30 + era * 10);
+                // Health scaling for 10 levels
+                const healthPerLevel = [25, 28, 30, 32, 35, 38, 42, 48, 45, 50];
+                this.health = healthPerLevel[era] || (25 + era * 5);
                 this.maxHealth = this.health;
                 this.phase = 0; // 0: entering, 1: fighting, 2: dying
                 this.attackCooldown = 0;
@@ -1621,8 +2077,15 @@
                 this.auraSize = 0;
                 this.breathe = 0;
                 
-                // Boss names and types per era
+                // Boss names and types per era (10 total now)
                 this.bossData = [
+                    // Prehistoric
+                    { name: 'TYRANNOSAURUS REX', color: '#3d5a2d', accent: '#7cb342', weapon: 'bite' },
+                    { name: 'FROST MAMMOTH', color: '#4a6a7a', accent: '#4fc3f7', weapon: 'tusks' },
+                    { name: 'ANUBIS GUARDIAN', color: '#1a1a1a', accent: '#ffd700', weapon: 'staff' },
+                    { name: 'THE MINOTAUR KING', color: '#5a3a2a', accent: '#ffffff', weapon: 'labyrinth_axe' },
+                    { name: 'FENRIR THE WOLF', color: '#3a3a3a', accent: '#c0c0c0', weapon: 'fangs' },
+                    // Historical
                     { name: 'THE WARLORD', color: '#8B4513', accent: '#ffd700', weapon: 'giant_axe' },
                     { name: 'ADMIRAL BLACKWOOD', color: '#1a2a4a', accent: '#c0c0c0', weapon: 'cannon' },
                     { name: 'THE IRON TITAN', color: '#4a4a4a', accent: '#cd7f32', weapon: 'steam_fist' },
@@ -1769,7 +2232,7 @@
                 this.attackCooldown--;
                 if (this.attackCooldown <= 0 && !this.isJumping) {
                     this.attack(player);
-                    this.attackCooldown = 150 - this.era * 15; // Slightly slower attacks
+                    this.attackCooldown = 180 - this.era * 10; // Scaled for 10 levels
                     this.attackPattern = (this.attackPattern + 1) % 3;
                 }
                 
@@ -1781,11 +2244,118 @@
                 screenShake = 15;
                 
                 switch(this.era) {
-                    case 0: this.createShockwave(); break;
-                    case 1: this.createProjectile(player); break;
-                    case 2: this.createSteamBlast(); break;
-                    case 3: this.createLaserBeam(player); break;
-                    case 4: this.createTimeRifts(); break;
+                    // Prehistoric eras
+                    case 0: this.createDinoRoar(); break;        // T-Rex
+                    case 1: this.createIceBlast(); break;        // Mammoth
+                    case 2: this.createSandstorm(); break;       // Anubis
+                    case 3: this.createLabyrinthCharge(); break; // Minotaur
+                    case 4: this.createWolfHowl(); break;        // Fenrir
+                    // Historical eras
+                    case 5: this.createShockwave(); break;       // Warlord
+                    case 6: this.createProjectile(player); break; // Admiral
+                    case 7: this.createSteamBlast(); break;      // Iron Titan
+                    case 8: this.createLaserBeam(player); break; // Omega Prime
+                    case 9: this.createTimeRifts(); break;       // Temporal Warden
+                }
+            }
+            
+            // New prehistoric attack methods
+            createDinoRoar() {
+                // T-Rex creates a massive roar shockwave
+                for (let i = 0; i < 25; i++) {
+                    particles.push({
+                        x: this.x + this.width / 2,
+                        y: this.y + 80,
+                        vx: (Math.random() - 0.5) * 15 + this.facing * 8,
+                        vy: (Math.random() - 0.5) * 8,
+                        life: 1,
+                        color: '#7cb342',
+                        size: 20 + Math.random() * 15,
+                        damaging: true
+                    });
+                }
+                // Also creates ground tremor
+                for (let i = 0; i < 15; i++) {
+                    particles.push({
+                        x: this.x + this.width / 2 + (i - 7) * 60,
+                        y: canvas.height - 70,
+                        vx: (i - 7) * 2,
+                        vy: -8 - Math.random() * 5,
+                        life: 1,
+                        color: '#5a3a2a',
+                        size: 15 + Math.random() * 10,
+                        damaging: true
+                    });
+                }
+            }
+            
+            createIceBlast() {
+                // Mammoth shoots ice shards
+                for (let i = 0; i < 8; i++) {
+                    const angle = (this.facing === -1 ? Math.PI : 0) + (Math.random() - 0.5) * 0.5;
+                    projectiles.push({
+                        x: this.x + this.width / 2,
+                        y: this.y + 100,
+                        vx: Math.cos(angle) * (8 + Math.random() * 4),
+                        vy: Math.sin(angle) * 4 - 2,
+                        size: 20,
+                        color: '#4fc3f7',
+                        life: 150,
+                        type: 'ice_shard'
+                    });
+                }
+            }
+            
+            createSandstorm() {
+                // Anubis creates a sandstorm
+                for (let i = 0; i < 40; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * 100,
+                        vx: this.facing * (5 + Math.random() * 10),
+                        vy: 2 + Math.random() * 3,
+                        life: 1,
+                        color: '#d4a574',
+                        size: 8 + Math.random() * 12,
+                        damaging: true
+                    });
+                }
+            }
+            
+            createLabyrinthCharge() {
+                // Minotaur charges at player
+                this.isCharging = true;
+                this.chargeTimer = 60;
+                this.vx = this.facing * 12;
+                // Trail particles
+                for (let i = 0; i < 10; i++) {
+                    particles.push({
+                        x: this.x + this.width / 2,
+                        y: this.y + this.height / 2 + Math.random() * 50,
+                        vx: -this.facing * (2 + Math.random() * 3),
+                        vy: (Math.random() - 0.5) * 4,
+                        life: 1,
+                        color: '#8a6a4a',
+                        size: 10 + Math.random() * 10
+                    });
+                }
+            }
+            
+            createWolfHowl() {
+                // Fenrir howls and summons shadow wolves
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        projectiles.push({
+                            x: this.facing === -1 ? 0 : canvas.width,
+                            y: canvas.height - 150,
+                            vx: this.facing === -1 ? 10 : -10,
+                            vy: 0,
+                            size: 40,
+                            life: 120,
+                            type: 'shadow_wolf',
+                            color: '#3a3a3a'
+                        });
+                    }, i * 150);
                 }
             }
             
@@ -1988,7 +2558,515 @@
                 const pulse = Math.sin(Date.now() / 200) * 0.5 + 0.5;
                 
                 switch(this.era) {
-                    case 0: // THE WARLORD - Medieval Dark Knight
+                    case 0: // TYRANNOSAURUS REX - Dinosaur Age
+                        // Massive dinosaur body
+                        ctx.fillStyle = '#3d5a2d';
+                        // Tail
+                        ctx.beginPath();
+                        ctx.moveTo(80, 40 + bounce);
+                        ctx.quadraticCurveTo(180, 20 + bounce, 220, 60 + bounce);
+                        ctx.quadraticCurveTo(180, 80 + bounce, 80, 60 + bounce);
+                        ctx.fill();
+                        // Tail spikes
+                        ctx.fillStyle = '#2d4a1d';
+                        for (let i = 0; i < 4; i++) {
+                            ctx.beginPath();
+                            ctx.moveTo(100 + i * 30, 30 + bounce);
+                            ctx.lineTo(110 + i * 30, 10 + bounce);
+                            ctx.lineTo(120 + i * 30, 30 + bounce);
+                            ctx.fill();
+                        }
+                        // Body
+                        ctx.fillStyle = '#3d5a2d';
+                        ctx.beginPath();
+                        ctx.ellipse(0, 30 + bounce + breathe, 100, 80, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Belly
+                        ctx.fillStyle = '#5a7a4a';
+                        ctx.beginPath();
+                        ctx.ellipse(0, 50 + bounce + breathe, 70, 50, 0, 0, Math.PI);
+                        ctx.fill();
+                        // Legs
+                        ctx.fillStyle = '#3d5a2d';
+                        ctx.fillRect(-70, 90 + bounce, 40, 80);
+                        ctx.fillRect(30, 90 + bounce, 40, 80);
+                        // Clawed feet
+                        ctx.fillStyle = '#2d4a1d';
+                        ctx.beginPath();
+                        ctx.moveTo(-80, 170 + bounce);
+                        ctx.lineTo(-90, 180 + bounce);
+                        ctx.lineTo(-60, 170 + bounce);
+                        ctx.lineTo(-50, 180 + bounce);
+                        ctx.lineTo(-30, 170 + bounce);
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.moveTo(20, 170 + bounce);
+                        ctx.lineTo(10, 180 + bounce);
+                        ctx.lineTo(40, 170 + bounce);
+                        ctx.lineTo(50, 180 + bounce);
+                        ctx.lineTo(70, 170 + bounce);
+                        ctx.fill();
+                        // Tiny arms
+                        ctx.fillStyle = '#3d5a2d';
+                        ctx.fillRect(-60, 0 + bounce, 20, 35);
+                        ctx.fillRect(40, 0 + bounce, 20, 35);
+                        // Neck
+                        ctx.beginPath();
+                        ctx.moveTo(-40, -40 + bounce + breathe);
+                        ctx.quadraticCurveTo(-80, -80 + bounce, -70, -120 + bounce);
+                        ctx.lineTo(-30, -120 + bounce);
+                        ctx.quadraticCurveTo(-40, -80 + bounce, -10, -40 + bounce);
+                        ctx.fill();
+                        // Head
+                        ctx.fillStyle = '#3d5a2d';
+                        ctx.beginPath();
+                        ctx.ellipse(-50, -140 + bounce + breathe, 60, 40, -0.3, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Jaw
+                        ctx.fillStyle = '#2d4a1d';
+                        ctx.beginPath();
+                        ctx.moveTo(-100, -130 + bounce + breathe);
+                        ctx.lineTo(-110, -110 + bounce + breathe);
+                        ctx.lineTo(-20, -120 + bounce + breathe);
+                        ctx.closePath();
+                        ctx.fill();
+                        // Teeth
+                        ctx.fillStyle = '#fff';
+                        for (let i = 0; i < 6; i++) {
+                            ctx.beginPath();
+                            ctx.moveTo(-100 + i * 15, -125 + bounce + breathe);
+                            ctx.lineTo(-95 + i * 15, -110 + bounce + breathe);
+                            ctx.lineTo(-90 + i * 15, -125 + bounce + breathe);
+                            ctx.fill();
+                        }
+                        // Eye
+                        ctx.fillStyle = '#ff4400';
+                        ctx.shadowColor = '#ff4400';
+                        ctx.shadowBlur = 15;
+                        ctx.beginPath();
+                        ctx.arc(-30, -150 + bounce + breathe, 12, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.fillStyle = '#000';
+                        ctx.beginPath();
+                        ctx.ellipse(-30, -150 + bounce + breathe, 4, 8, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                        break;
+                        
+                    case 1: // FROST MAMMOTH - Ice Age
+                        // Massive furry body
+                        ctx.fillStyle = '#5a6a7a';
+                        ctx.beginPath();
+                        ctx.ellipse(0, 20 + bounce + breathe, 120, 100, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Fur texture
+                        ctx.strokeStyle = '#4a5a6a';
+                        ctx.lineWidth = 3;
+                        for (let i = 0; i < 20; i++) {
+                            const angle = (i / 20) * Math.PI * 2;
+                            const x1 = Math.cos(angle) * 100;
+                            const y1 = Math.sin(angle) * 80 + 20;
+                            const x2 = Math.cos(angle) * 130;
+                            const y2 = Math.sin(angle) * 110 + 20;
+                            ctx.beginPath();
+                            ctx.moveTo(x1, y1 + bounce);
+                            ctx.lineTo(x2, y2 + bounce);
+                            ctx.stroke();
+                        }
+                        // Legs (thick, furry)
+                        ctx.fillStyle = '#5a6a7a';
+                        ctx.fillRect(-90, 80 + bounce, 50, 100);
+                        ctx.fillRect(-20, 80 + bounce, 50, 100);
+                        ctx.fillRect(40, 80 + bounce, 50, 100);
+                        // Feet
+                        ctx.fillStyle = '#4a5a6a';
+                        ctx.beginPath();
+                        ctx.ellipse(-65, 175 + bounce, 30, 15, 0, 0, Math.PI * 2);
+                        ctx.ellipse(5, 175 + bounce, 30, 15, 0, 0, Math.PI * 2);
+                        ctx.ellipse(65, 175 + bounce, 30, 15, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Head
+                        ctx.fillStyle = '#5a6a7a';
+                        ctx.beginPath();
+                        ctx.ellipse(-80, -60 + bounce + breathe, 70, 60, 0.2, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Trunk
+                        ctx.fillStyle = '#4a5a6a';
+                        ctx.beginPath();
+                        ctx.moveTo(-130, -40 + bounce + breathe);
+                        ctx.quadraticCurveTo(-180, 20 + bounce, -160, 100 + bounce);
+                        ctx.lineTo(-140, 100 + bounce);
+                        ctx.quadraticCurveTo(-160, 20 + bounce, -120, -30 + bounce + breathe);
+                        ctx.fill();
+                        // Tusks
+                        ctx.fillStyle = '#f0e6d2';
+                        ctx.shadowColor = '#4fc3f7';
+                        ctx.shadowBlur = 10;
+                        ctx.beginPath();
+                        ctx.moveTo(-110, -30 + bounce + breathe);
+                        ctx.quadraticCurveTo(-180, -60 + bounce, -200, 20 + bounce);
+                        ctx.quadraticCurveTo(-180, 40 + bounce, -140, 0 + bounce + breathe);
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.moveTo(-50, -30 + bounce + breathe);
+                        ctx.quadraticCurveTo(20, -60 + bounce, 40, 20 + bounce);
+                        ctx.quadraticCurveTo(20, 40 + bounce, -20, 0 + bounce + breathe);
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                        // Eyes
+                        ctx.fillStyle = '#4fc3f7';
+                        ctx.shadowColor = '#4fc3f7';
+                        ctx.shadowBlur = 10;
+                        ctx.beginPath();
+                        ctx.arc(-100, -70 + bounce + breathe, 10, 0, Math.PI * 2);
+                        ctx.arc(-60, -70 + bounce + breathe, 10, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.fillStyle = '#1a3a4a';
+                        ctx.beginPath();
+                        ctx.arc(-100, -70 + bounce + breathe, 5, 0, Math.PI * 2);
+                        ctx.arc(-60, -70 + bounce + breathe, 5, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                        // Frost particles
+                        ctx.fillStyle = '#aaddff';
+                        for (let i = 0; i < 8; i++) {
+                            const px = Math.cos(Date.now() / 500 + i) * (100 + i * 10);
+                            const py = Math.sin(Date.now() / 500 + i) * 60 + bounce;
+                            ctx.beginPath();
+                            ctx.arc(px, py, 3 + Math.random() * 3, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                        break;
+                        
+                    case 2: // ANUBIS GUARDIAN - Ancient Egypt
+                        // Ethereal dark body
+                        ctx.fillStyle = '#1a1a1a';
+                        // Body/robes
+                        ctx.beginPath();
+                        ctx.moveTo(-80, -60 + bounce + breathe);
+                        ctx.lineTo(80, -60 + bounce + breathe);
+                        ctx.lineTo(100, 170 + bounce);
+                        ctx.lineTo(-100, 170 + bounce);
+                        ctx.closePath();
+                        ctx.fill();
+                        // Gold trim
+                        ctx.strokeStyle = '#ffd700';
+                        ctx.lineWidth = 4;
+                        ctx.beginPath();
+                        ctx.moveTo(-80, -60 + bounce + breathe);
+                        ctx.lineTo(-100, 170 + bounce);
+                        ctx.moveTo(80, -60 + bounce + breathe);
+                        ctx.lineTo(100, 170 + bounce);
+                        ctx.stroke();
+                        // Collar/necklace
+                        ctx.fillStyle = '#ffd700';
+                        ctx.beginPath();
+                        ctx.ellipse(0, -50 + bounce + breathe, 90, 30, 0, 0, Math.PI);
+                        ctx.fill();
+                        ctx.fillStyle = '#00aaff';
+                        ctx.beginPath();
+                        ctx.ellipse(0, -45 + bounce + breathe, 70, 20, 0, 0, Math.PI);
+                        ctx.fill();
+                        // Arms
+                        ctx.fillStyle = '#1a1a1a';
+                        ctx.fillRect(-120, -30 + bounce, 40, 120);
+                        ctx.fillRect(80, -30 + bounce, 40, 120);
+                        // Staff (Was scepter)
+                        ctx.fillStyle = '#ffd700';
+                        ctx.fillRect(100, -150 + bounce, 12, 300);
+                        // Was head (forked top)
+                        ctx.beginPath();
+                        ctx.moveTo(106, -150 + bounce);
+                        ctx.lineTo(90, -200 + bounce);
+                        ctx.lineTo(95, -200 + bounce);
+                        ctx.lineTo(106, -160 + bounce);
+                        ctx.lineTo(117, -200 + bounce);
+                        ctx.lineTo(122, -200 + bounce);
+                        ctx.lineTo(106, -150 + bounce);
+                        ctx.fill();
+                        // Jackal head
+                        ctx.fillStyle = '#1a1a1a';
+                        ctx.beginPath();
+                        ctx.ellipse(0, -100 + bounce + breathe, 50, 45, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Snout
+                        ctx.beginPath();
+                        ctx.moveTo(-30, -100 + bounce + breathe);
+                        ctx.lineTo(-90, -80 + bounce + breathe);
+                        ctx.lineTo(-90, -70 + bounce + breathe);
+                        ctx.lineTo(-30, -90 + bounce + breathe);
+                        ctx.fill();
+                        // Ears
+                        ctx.beginPath();
+                        ctx.moveTo(-20, -140 + bounce + breathe);
+                        ctx.lineTo(-40, -190 + bounce + breathe);
+                        ctx.lineTo(0, -145 + bounce + breathe);
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.moveTo(20, -140 + bounce + breathe);
+                        ctx.lineTo(40, -190 + bounce + breathe);
+                        ctx.lineTo(0, -145 + bounce + breathe);
+                        ctx.fill();
+                        // Glowing eyes
+                        ctx.fillStyle = '#ffd700';
+                        ctx.shadowColor = '#ffd700';
+                        ctx.shadowBlur = 20;
+                        ctx.beginPath();
+                        ctx.arc(-15, -110 + bounce + breathe, 8, 0, Math.PI * 2);
+                        ctx.arc(15, -110 + bounce + breathe, 8, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                        // Hieroglyph particles
+                        ctx.fillStyle = '#ffd700';
+                        ctx.font = '20px serif';
+                        const glyphs = ['𓂀', '𓃭', '𓆣', '𓇯', '𓊽'];
+                        for (let i = 0; i < 5; i++) {
+                            const gx = Math.sin(Date.now() / 1000 + i * 1.2) * 100;
+                            const gy = -50 + Math.cos(Date.now() / 800 + i) * 80 + bounce;
+                            ctx.fillText(glyphs[i], gx - 10, gy);
+                        }
+                        break;
+                        
+                    case 3: // THE MINOTAUR KING - Ancient Greece
+                        // Muscular body
+                        ctx.fillStyle = '#5a3a2a';
+                        // Torso
+                        ctx.beginPath();
+                        ctx.ellipse(0, 0 + bounce + breathe, 80, 90, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Chest muscles
+                        ctx.fillStyle = '#4a2a1a';
+                        ctx.beginPath();
+                        ctx.arc(-25, -20 + bounce + breathe, 30, 0, Math.PI * 2);
+                        ctx.arc(25, -20 + bounce + breathe, 30, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Abs
+                        ctx.fillStyle = '#4a2a1a';
+                        for (let i = 0; i < 3; i++) {
+                            ctx.beginPath();
+                            ctx.ellipse(-15, 20 + i * 25 + bounce, 15, 10, 0, 0, Math.PI * 2);
+                            ctx.ellipse(15, 20 + i * 25 + bounce, 15, 10, 0, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                        // Legs
+                        ctx.fillStyle = '#5a3a2a';
+                        ctx.fillRect(-60, 80 + bounce, 45, 90);
+                        ctx.fillRect(15, 80 + bounce, 45, 90);
+                        // Hooves
+                        ctx.fillStyle = '#2a1a0a';
+                        ctx.beginPath();
+                        ctx.ellipse(-37, 175 + bounce, 25, 15, 0, 0, Math.PI * 2);
+                        ctx.ellipse(37, 175 + bounce, 25, 15, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Arms
+                        ctx.fillStyle = '#5a3a2a';
+                        ctx.save();
+                        ctx.translate(-80, -30 + bounce);
+                        ctx.rotate(-0.3);
+                        ctx.fillRect(0, 0, 40, 100);
+                        ctx.restore();
+                        ctx.save();
+                        ctx.translate(40, -30 + bounce);
+                        ctx.rotate(0.3);
+                        ctx.fillRect(0, 0, 40, 100);
+                        ctx.restore();
+                        // Bull head
+                        ctx.fillStyle = '#5a3a2a';
+                        ctx.beginPath();
+                        ctx.ellipse(0, -100 + bounce + breathe, 60, 50, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Snout
+                        ctx.fillStyle = '#4a2a1a';
+                        ctx.beginPath();
+                        ctx.ellipse(0, -70 + bounce + breathe, 40, 30, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Nose ring
+                        ctx.strokeStyle = '#ffd700';
+                        ctx.lineWidth = 5;
+                        ctx.beginPath();
+                        ctx.arc(0, -60 + bounce + breathe, 15, 0.2, Math.PI - 0.2);
+                        ctx.stroke();
+                        // Horns
+                        ctx.fillStyle = '#f0e6d2';
+                        ctx.shadowColor = '#fff';
+                        ctx.shadowBlur = 10;
+                        ctx.beginPath();
+                        ctx.moveTo(-50, -110 + bounce + breathe);
+                        ctx.quadraticCurveTo(-100, -150 + bounce, -120, -100 + bounce + breathe);
+                        ctx.lineTo(-110, -90 + bounce + breathe);
+                        ctx.quadraticCurveTo(-90, -130 + bounce, -45, -100 + bounce + breathe);
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.moveTo(50, -110 + bounce + breathe);
+                        ctx.quadraticCurveTo(100, -150 + bounce, 120, -100 + bounce + breathe);
+                        ctx.lineTo(110, -90 + bounce + breathe);
+                        ctx.quadraticCurveTo(90, -130 + bounce, 45, -100 + bounce + breathe);
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                        // Eyes (red, angry)
+                        ctx.fillStyle = '#ff2200';
+                        ctx.shadowColor = '#ff2200';
+                        ctx.shadowBlur = 15;
+                        ctx.beginPath();
+                        ctx.arc(-25, -100 + bounce + breathe, 10, 0, Math.PI * 2);
+                        ctx.arc(25, -100 + bounce + breathe, 10, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                        // Labyrinth Axe
+                        ctx.fillStyle = '#8a6a4a';
+                        ctx.fillRect(100, -80 + bounce, 15, 200);
+                        ctx.fillStyle = '#c0c0c0';
+                        ctx.beginPath();
+                        ctx.moveTo(115, -80 + bounce);
+                        ctx.lineTo(180, -40 + bounce);
+                        ctx.lineTo(180, 0 + bounce);
+                        ctx.lineTo(115, -20 + bounce);
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.moveTo(115, -60 + bounce);
+                        ctx.lineTo(180, -100 + bounce);
+                        ctx.lineTo(180, -60 + bounce);
+                        ctx.lineTo(115, -40 + bounce);
+                        ctx.fill();
+                        // Maze pattern on axe
+                        ctx.strokeStyle = '#666';
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.moveTo(130, -70 + bounce);
+                        ctx.lineTo(160, -70 + bounce);
+                        ctx.lineTo(160, -50 + bounce);
+                        ctx.lineTo(140, -50 + bounce);
+                        ctx.stroke();
+                        break;
+                        
+                    case 4: // FENRIR THE WOLF - Viking Age
+                        // Massive wolf body
+                        ctx.fillStyle = '#3a3a3a';
+                        // Body
+                        ctx.beginPath();
+                        ctx.ellipse(20, 30 + bounce + breathe, 120, 80, 0.1, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Fur detail
+                        ctx.fillStyle = '#2a2a2a';
+                        for (let i = 0; i < 15; i++) {
+                            const fx = -80 + i * 15 + Math.random() * 10;
+                            const fy = -20 + Math.random() * 80 + bounce;
+                            ctx.beginPath();
+                            ctx.moveTo(fx, fy);
+                            ctx.lineTo(fx + 5, fy - 15);
+                            ctx.lineTo(fx + 10, fy);
+                            ctx.fill();
+                        }
+                        // Back legs
+                        ctx.fillStyle = '#3a3a3a';
+                        ctx.fillRect(60, 80 + bounce, 40, 80);
+                        ctx.fillRect(100, 80 + bounce, 40, 80);
+                        // Front legs
+                        ctx.fillRect(-80, 70 + bounce, 35, 90);
+                        ctx.fillRect(-40, 70 + bounce, 35, 90);
+                        // Paws
+                        ctx.fillStyle = '#2a2a2a';
+                        ctx.beginPath();
+                        ctx.ellipse(-62, 165 + bounce, 25, 12, 0, 0, Math.PI * 2);
+                        ctx.ellipse(-22, 165 + bounce, 25, 12, 0, 0, Math.PI * 2);
+                        ctx.ellipse(80, 165 + bounce, 25, 12, 0, 0, Math.PI * 2);
+                        ctx.ellipse(120, 165 + bounce, 25, 12, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Claws
+                        ctx.fillStyle = '#1a1a1a';
+                        for (let p = 0; p < 4; p++) {
+                            const px = [-62, -22, 80, 120][p];
+                            for (let c = 0; c < 3; c++) {
+                                ctx.beginPath();
+                                ctx.moveTo(px - 15 + c * 15, 165 + bounce);
+                                ctx.lineTo(px - 12 + c * 15, 180 + bounce);
+                                ctx.lineTo(px - 9 + c * 15, 165 + bounce);
+                                ctx.fill();
+                            }
+                        }
+                        // Tail
+                        ctx.fillStyle = '#3a3a3a';
+                        ctx.beginPath();
+                        ctx.moveTo(130, 30 + bounce);
+                        ctx.quadraticCurveTo(200, 0 + bounce, 220, 50 + bounce);
+                        ctx.quadraticCurveTo(200, 80 + bounce, 130, 60 + bounce);
+                        ctx.fill();
+                        // Neck/mane
+                        ctx.fillStyle = '#4a4a4a';
+                        ctx.beginPath();
+                        ctx.moveTo(-60, -30 + bounce + breathe);
+                        ctx.quadraticCurveTo(-100, -80 + bounce, -80, -100 + bounce);
+                        ctx.lineTo(-40, -100 + bounce);
+                        ctx.quadraticCurveTo(-60, -60 + bounce, -30, -30 + bounce + breathe);
+                        ctx.fill();
+                        // Wolf head
+                        ctx.fillStyle = '#3a3a3a';
+                        ctx.beginPath();
+                        ctx.ellipse(-60, -110 + bounce + breathe, 55, 45, 0.1, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Snout
+                        ctx.beginPath();
+                        ctx.moveTo(-90, -110 + bounce + breathe);
+                        ctx.lineTo(-150, -90 + bounce + breathe);
+                        ctx.lineTo(-150, -80 + bounce + breathe);
+                        ctx.lineTo(-90, -100 + bounce + breathe);
+                        ctx.fill();
+                        // Open jaw
+                        ctx.fillStyle = '#2a2a2a';
+                        ctx.beginPath();
+                        ctx.moveTo(-100, -95 + bounce + breathe);
+                        ctx.lineTo(-160, -70 + bounce + breathe);
+                        ctx.lineTo(-100, -80 + bounce + breathe);
+                        ctx.fill();
+                        // Teeth
+                        ctx.fillStyle = '#fff';
+                        for (let i = 0; i < 5; i++) {
+                            ctx.beginPath();
+                            ctx.moveTo(-100 - i * 12, -95 + bounce + breathe);
+                            ctx.lineTo(-105 - i * 12, -80 + bounce + breathe);
+                            ctx.lineTo(-110 - i * 12, -95 + bounce + breathe);
+                            ctx.fill();
+                        }
+                        // Ears
+                        ctx.fillStyle = '#3a3a3a';
+                        ctx.beginPath();
+                        ctx.moveTo(-80, -140 + bounce + breathe);
+                        ctx.lineTo(-100, -180 + bounce + breathe);
+                        ctx.lineTo(-60, -145 + bounce + breathe);
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.moveTo(-40, -140 + bounce + breathe);
+                        ctx.lineTo(-20, -180 + bounce + breathe);
+                        ctx.lineTo(-60, -145 + bounce + breathe);
+                        ctx.fill();
+                        // Glowing eyes
+                        ctx.fillStyle = '#c0c0c0';
+                        ctx.shadowColor = '#c0c0c0';
+                        ctx.shadowBlur = 20;
+                        ctx.beginPath();
+                        ctx.arc(-80, -115 + bounce + breathe, 10, 0, Math.PI * 2);
+                        ctx.arc(-45, -115 + bounce + breathe, 10, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.fillStyle = '#ff4400';
+                        ctx.beginPath();
+                        ctx.ellipse(-80, -115 + bounce + breathe, 3, 6, 0, 0, Math.PI * 2);
+                        ctx.ellipse(-45, -115 + bounce + breathe, 3, 6, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                        // Chains (broken)
+                        ctx.strokeStyle = '#666';
+                        ctx.lineWidth = 8;
+                        ctx.beginPath();
+                        ctx.moveTo(-100, -80 + bounce);
+                        ctx.lineTo(-120, -40 + bounce);
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(100, 50 + bounce);
+                        ctx.lineTo(140, 90 + bounce);
+                        ctx.stroke();
+                        break;
+                        
+                    case 5: // THE WARLORD - Medieval Dark Knight
                         // Ominous aura
                         ctx.fillStyle = 'rgba(139, 69, 19, 0.2)';
                         ctx.beginPath();
@@ -2156,7 +3234,7 @@
                         ctx.fill();
                         break;
                         
-                    case 1: // ADMIRAL BLACKWOOD - Naval Commander
+                    case 6: // ADMIRAL BLACKWOOD - Naval Commander
                         // Sea mist aura
                         ctx.fillStyle = 'rgba(74, 111, 165, 0.15)';
                         ctx.beginPath();
@@ -2333,7 +3411,7 @@
                         ctx.fillRect(200, -30 + bounce, 8, 50);
                         break;
                         
-                    case 2: // THE IRON TITAN - Steampunk Colossus
+                    case 7: // THE IRON TITAN - Steampunk Colossus
                         // Steam cloud aura
                         ctx.fillStyle = 'rgba(205, 127, 50, 0.15)';
                         for (let i = 0; i < 5; i++) {
@@ -2509,7 +3587,7 @@
                         }
                         break;
                         
-                    case 3: // OMEGA PRIME - Cybernetic Overlord
+                    case 8: // OMEGA PRIME - Cybernetic Overlord
                         // Digital matrix aura
                         ctx.strokeStyle = '#00ffff30';
                         ctx.lineWidth = 1;
@@ -2686,7 +3764,7 @@
                         }
                         break;
                         
-                    case 4: // TEMPORAL WARDEN - Cosmic Entity
+                    case 9: // TEMPORAL WARDEN - Cosmic Entity
                         // Reality distortion field
                         const warpHue = (Date.now() / 20) % 360;
                         for (let i = 5; i > 0; i--) {
@@ -3027,16 +4105,33 @@
                 this.canShoot = false;
                 this.shootCooldown = 0;
                 this.scale = 1;
+                this.powerupCount = 0; // Track number of powerups collected
+                this.superPowered = false; // MEGA mode after 2 powerups
+                this.firstPowerupTimer = 0; // Timer to get second powerup
                 // Crouch state
                 this.crouching = false;
                 this.crouchHeight = 35;
                 this.crouchAnim = 0;
                 // Tennis ball cooldown
                 this.tennisBallCooldown = 0;
+                // Sliding state
+                this.isSliding = false;
+                this.slideSpeed = 0;
+                this.onHill = null; // Reference to current hill
+                this.hillSlope = 0;
             }
             
             update(keys, platforms) {
                 const era = ERAS[currentLevel];
+                
+                // First powerup timer - must get second powerup in time
+                if (this.firstPowerupTimer > 0) {
+                    this.firstPowerupTimer--;
+                    if (this.firstPowerupTimer <= 0 && !this.superPowered) {
+                        // Time ran out without getting second powerup - reset
+                        this.powerupCount = 0;
+                    }
+                }
                 
                 // Powerup timer
                 if (this.powered) {
@@ -3044,6 +4139,8 @@
                     if (this.powerTimer <= 0) {
                         this.powered = false;
                         this.canShoot = false;
+                        this.superPowered = false;
+                        this.powerupCount = 0;
                         this.scale = 1;
                         this.width = this.baseWidth;
                         this.height = this.baseHeight;
@@ -3074,14 +4171,82 @@
                     }
                 }
                 
-                // Horizontal movement
+                // Horizontal movement with slope effects
+                let effectiveSpeed = this.speed;
+                
+                // Check if on a hill and apply slope physics
+                this.isSliding = false;
+                this.onHill = null;
+                this.hillSlope = 0;
+                
+                if (this.grounded) {
+                    // Check all platforms for hills
+                    for (const plat of platforms) {
+                        if (plat.isHill) {
+                            const playerCenterX = this.x + this.width / 2;
+                            if (playerCenterX >= plat.x && playerCenterX <= plat.x + plat.width) {
+                                const slope = plat.getSlopeAt(playerCenterX);
+                                this.hillSlope = slope;
+                                this.onHill = plat;
+                                
+                                // Slope affects movement
+                                if (slope < -0.3) {
+                                    // Going uphill (left side of hill when moving right)
+                                    if (this.vx > 0) {
+                                        effectiveSpeed = this.speed * 0.5; // Slower uphill
+                                    } else {
+                                        effectiveSpeed = this.speed * 1.5; // Faster downhill
+                                        // Start sliding if crouching
+                                        if (this.crouching && Math.abs(this.vx) > 1) {
+                                            this.isSliding = true;
+                                            this.slideSpeed = Math.min(this.slideSpeed + 0.5, 15);
+                                        }
+                                    }
+                                } else if (slope > 0.3) {
+                                    // Going uphill (right side of hill when moving left)
+                                    if (this.vx < 0) {
+                                        effectiveSpeed = this.speed * 0.5; // Slower uphill
+                                    } else {
+                                        effectiveSpeed = this.speed * 1.5; // Faster downhill
+                                        // Start sliding if crouching
+                                        if (this.crouching && Math.abs(this.vx) > 1) {
+                                            this.isSliding = true;
+                                            this.slideSpeed = Math.min(this.slideSpeed + 0.5, 15);
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                // Decay slide speed when not sliding
+                if (!this.isSliding) {
+                    this.slideSpeed *= 0.9;
+                }
+                
                 if (keys.left) {
-                    this.vx = -this.speed;
+                    if (this.isSliding && this.slideSpeed > 3) {
+                        this.vx = -this.slideSpeed;
+                    } else {
+                        this.vx = -effectiveSpeed;
+                    }
                     this.facing = -1;
                 } else if (keys.right) {
-                    this.vx = this.speed;
+                    if (this.isSliding && this.slideSpeed > 3) {
+                        this.vx = this.slideSpeed;
+                    } else {
+                        this.vx = effectiveSpeed;
+                    }
                     this.facing = 1;
                 } else {
+                    // Natural sliding downhill when not pressing keys
+                    if (this.grounded && this.onHill && Math.abs(this.hillSlope) > 0.3) {
+                        const slideDir = this.hillSlope > 0 ? 1 : -1;
+                        this.vx += slideDir * 0.3;
+                        this.vx = Math.max(-8, Math.min(8, this.vx));
+                    }
                     this.vx *= 0.8;
                 }
                 
@@ -3145,27 +4310,59 @@
                 this.x += this.vx;
                 this.y += this.vy;
                 
-                // Platform collision
+                // Platform collision with improved hill support
+                const wasGrounded = this.grounded;
+                const wasInAir = !wasGrounded && this.vy > 0;
                 this.grounded = false;
+                let onHillSurface = false;
+                
                 for (let plat of platforms) {
-                    if (this.vy > 0 &&
-                        this.x + this.width > plat.x &&
-                        this.x < plat.x + plat.width &&
-                        this.y + this.height > plat.y &&
-                        this.y + this.height < plat.y + plat.height + this.vy + 5) {
-                        this.y = plat.y - this.height;
-                        this.vy = 0;
-                        this.grounded = true;
-                        this.jumpsRemaining = this.maxJumps;
+                    // Check if player is within horizontal bounds of platform
+                    if (this.x + this.width > plat.x && this.x < plat.x + plat.width) {
+                        
+                        if (plat.isHill) {
+                            // For hills, calculate the surface height at player position
+                            const playerCenterX = this.x + this.width / 2;
+                            const hillSurfaceY = plat.getHillYAt(playerCenterX);
+                            const playerBottom = this.y + this.height;
+                            
+                            // Snap to hill surface if player is above the surface and close to it
+                            // or if player would fall through the surface
+                            if (playerBottom >= hillSurfaceY - 20 && playerBottom <= hillSurfaceY + 100) {
+                                // Only snap if we're falling or already close to the surface
+                                if (this.vy >= 0 || playerBottom >= hillSurfaceY - 5) {
+                                    this.y = hillSurfaceY - this.height;
+                                    this.vy = 0;
+                                    this.grounded = true;
+                                    this.jumpsRemaining = this.maxJumps;
+                                    onHillSurface = true;
+                                }
+                            }
+                        } else {
+                            // Regular platform collision
+                            if (this.vy >= 0 &&
+                                this.y + this.height > plat.y &&
+                                this.y + this.height < plat.y + plat.height + this.vy + 10) {
+                                this.y = plat.y - this.height;
+                                this.vy = 0;
+                                this.grounded = true;
+                                this.jumpsRemaining = this.maxJumps;
+                            }
+                        }
                     }
                 }
                 
-                // Ground collision
-                if (this.y + this.height > canvas.height - 60) {
+                // Ground collision (only if not on a hill)
+                if (!onHillSurface && this.y + this.height > canvas.height - 60) {
                     this.y = canvas.height - 60 - this.height;
                     this.vy = 0;
                     this.grounded = true;
                     this.jumpsRemaining = this.maxJumps;
+                }
+                
+                // GROUND POUND - Super powered player just landed!
+                if (this.superPowered && wasInAir && this.grounded) {
+                    this.groundPound();
                 }
                 
                 // Screen bounds
@@ -3245,13 +4442,20 @@
             
             getWeaponForEra() {
                 const weapons = [
-                    { type: 'arrow', speed: 12, size: 8, color: '#8B4513', damage: 2 },      // 1500s - Crossbow bolt
-                    { type: 'musket', speed: 15, size: 6, color: '#333', damage: 3 },        // 1700s - Musket ball
-                    { type: 'steam', speed: 10, size: 12, color: '#cd7f32', damage: 2 },     // 1900s - Steam projectile
-                    { type: 'laser', speed: 20, size: 4, color: '#00ffff', damage: 3 },      // 2100s - Laser
-                    { type: 'temporal', speed: 18, size: 10, color: '#bc8cff', damage: 4 }   // 2300s - Temporal blast
+                    // Prehistoric
+                    { type: 'rock', speed: 8, size: 10, color: '#666', damage: 1 },          // Dinosaur - Thrown rock
+                    { type: 'icicle', speed: 10, size: 8, color: '#4fc3f7', damage: 1 },     // Ice Age - Ice shard
+                    { type: 'ankh', speed: 12, size: 8, color: '#ffd700', damage: 2 },       // Egypt - Ankh blast
+                    { type: 'javelin', speed: 14, size: 6, color: '#cd7f32', damage: 2 },    // Greece - Javelin
+                    { type: 'axe', speed: 10, size: 12, color: '#c0c0c0', damage: 2 },       // Viking - Thrown axe
+                    // Historical
+                    { type: 'arrow', speed: 12, size: 8, color: '#8B4513', damage: 2 },      // Renaissance - Crossbow bolt
+                    { type: 'musket', speed: 15, size: 6, color: '#333', damage: 3 },        // Colonial - Musket ball
+                    { type: 'steam', speed: 10, size: 12, color: '#cd7f32', damage: 2 },     // Industrial - Steam projectile
+                    { type: 'laser', speed: 20, size: 4, color: '#00ffff', damage: 3 },      // Near Future - Laser
+                    { type: 'temporal', speed: 18, size: 10, color: '#bc8cff', damage: 4 }   // Far Future - Temporal blast
                 ];
-                return weapons[currentLevel];
+                return weapons[currentLevel] || weapons[0];
             }
             
             powerUp() {
@@ -3259,25 +4463,117 @@
                 this.powerTimer = 600; // 10 seconds at 60fps
                 this.canShoot = true;
                 
-                // Stack powerups
-                if (this.scale >= 6.0) {
-                    // Already powered - second powerup REDUCES size by 300% (divide by 4)
-                    const oldHeight = this.height;
-                    this.scale = this.scale / 4; // Shrink by 300%
-                    this.width = this.baseWidth * this.scale;
-                    this.height = this.baseHeight * this.scale;
-                    // Adjust position so player stays on ground
-                    this.y += (oldHeight - this.height);
+                const oldHeight = this.height;
+                
+                // Check if this is the second powerup within the time window
+                if (this.powerupCount >= 1 && this.firstPowerupTimer > 0) {
+                    // Got second powerup in time! SUPER POWERED MODE!
+                    this.powerupCount = 2;
+                    this.superPowered = true;
+                    this.scale = 3.0;
+                    this.width = this.baseWidth * 3.0;
+                    this.height = this.baseHeight * 3.0;
+                    this.y -= (this.height - oldHeight);
+                    this.firstPowerupTimer = 0; // Reset timer
+                    
+                    // Epic sound and screen shake
+                    screenShake = 30;
+                    sound.playTone(80, 0.5, 'sawtooth', 0.4);
+                    sound.playTone(60, 0.6, 'sawtooth', 0.3);
+                    
+                    // Create epic particle burst
+                    for (let i = 0; i < 30; i++) {
+                        particles.push({
+                            x: this.x + this.width / 2,
+                            y: this.y + this.height / 2,
+                            vx: (Math.random() - 0.5) * 20,
+                            vy: (Math.random() - 0.5) * 20,
+                            life: 1,
+                            color: '#ffd700',
+                            size: 8 + Math.random() * 8
+                        });
+                    }
                 } else {
-                    // First powerup - grow 500% (6x size)
-                    const oldHeight = this.height;
-                    this.scale = 6.0;
-                    this.width = this.baseWidth * 6.0;
-                    this.height = this.baseHeight * 6.0;
-                    // Adjust position so player doesn't clip through ground
+                    // First powerup - grow 150% (1.5x size) and start timer
+                    this.powerupCount = 1;
+                    this.firstPowerupTimer = 480; // 8 seconds to get second powerup (at 60fps)
+                    this.scale = 1.5;
+                    this.width = this.baseWidth * 1.5;
+                    this.height = this.baseHeight * 1.5;
                     this.y -= (this.height - oldHeight);
                 }
                 sound.playCollect(true);
+            }
+            
+            // Called when super powered player lands from a jump
+            groundPound() {
+                if (!this.superPowered) return;
+                
+                // Massive screen shake
+                screenShake = 40;
+                
+                // Ground pound sound
+                sound.playTone(40, 0.8, 'sawtooth', 0.5);
+                sound.playTone(30, 0.6, 'sine', 0.4);
+                
+                // Create shockwave particles
+                for (let i = 0; i < 40; i++) {
+                    const angle = (i / 40) * Math.PI * 2;
+                    particles.push({
+                        x: this.x + this.width / 2,
+                        y: this.y + this.height,
+                        vx: Math.cos(angle) * 15,
+                        vy: Math.sin(angle) * -5 - Math.random() * 5,
+                        life: 1,
+                        color: '#ffd700',
+                        size: 10 + Math.random() * 10,
+                        damaging: false
+                    });
+                }
+                
+                // Kill only enemies currently visible on screen!
+                const screenLeft = cameraX;
+                const screenRight = cameraX + canvas.width;
+                let killCount = 0;
+                
+                enemies.forEach(enemy => {
+                    // Check if enemy is on screen
+                    const enemyOnScreen = enemy.x + enemy.width > screenLeft && enemy.x < screenRight;
+                    
+                    if (!enemy.dead && enemyOnScreen) {
+                        enemy.dead = true;
+                        score += 100;
+                        killCount++;
+                        
+                        // Death particles for each enemy
+                        for (let i = 0; i < 10; i++) {
+                            particles.push({
+                                x: enemy.x + enemy.width / 2,
+                                y: enemy.y + enemy.height / 2,
+                                vx: (Math.random() - 0.5) * 10,
+                                vy: -Math.random() * 10,
+                                life: 1,
+                                color: '#ff4444',
+                                size: 6 + Math.random() * 6
+                            });
+                        }
+                        
+                        // Floating text
+                        floatingTexts.push({
+                            x: enemy.x + enemy.width / 2,
+                            y: enemy.y,
+                            text: "CRUSHED!",
+                            life: 1,
+                            vy: -3,
+                            color: '#ffd700'
+                        });
+                    }
+                });
+                
+                if (killCount > 0) {
+                    updateScoreUI();
+                    sound.playEnemyDeath(currentLevel);
+                }
             }
             
             attack() {
@@ -3350,23 +4646,48 @@
                 
                 // Powerup indicator
                 if (this.powered) {
-                    ctx.fillStyle = era.colors.accent;
-                    ctx.font = 'bold 14px Arial';
+                    ctx.fillStyle = this.superPowered ? '#ffd700' : era.colors.accent;
+                    ctx.font = this.superPowered ? 'bold 18px Arial' : 'bold 14px Arial';
                     ctx.textAlign = 'center';
-                    ctx.fillText('⚡ GIANT MODE ⚡', screenX + this.width / 2, this.y - 25);
+                    
+                    if (this.superPowered) {
+                        // Epic MEGA MODE text with glow
+                        ctx.shadowColor = '#ffd700';
+                        ctx.shadowBlur = 20;
+                        ctx.fillText('💥 MEGA MODE - GROUND POUND! 💥', screenX + this.width / 2, this.y - 35);
+                        ctx.shadowBlur = 0;
+                    } else if (this.firstPowerupTimer > 0) {
+                        // Show urgency to get second powerup
+                        const secondsLeft = Math.ceil(this.firstPowerupTimer / 60);
+                        ctx.fillStyle = this.firstPowerupTimer < 180 ? '#ff4444' : '#ffaa00';
+                        ctx.fillText(`⚡ GET 2ND POWERUP! ${secondsLeft}s ⚡`, screenX + this.width / 2, this.y - 25);
+                    } else {
+                        ctx.fillText('⚡ POWERED UP ⚡', screenX + this.width / 2, this.y - 25);
+                    }
+                    
                     // Timer bar
-                    const barWidth = 80;
+                    const barWidth = this.superPowered ? 120 : 80;
                     const timeLeft = this.powerTimer / 600;
                     ctx.fillStyle = '#333';
                     ctx.fillRect(screenX + this.width / 2 - barWidth / 2, this.y - 15, barWidth, 6);
-                    ctx.fillStyle = era.colors.accent;
+                    ctx.fillStyle = this.superPowered ? '#ffd700' : era.colors.accent;
                     ctx.fillRect(screenX + this.width / 2 - barWidth / 2, this.y - 15, barWidth * timeLeft, 6);
+                    
+                    // Second powerup timer bar (below main bar)
+                    if (this.firstPowerupTimer > 0 && !this.superPowered) {
+                        const comboTimeLeft = this.firstPowerupTimer / 480;
+                        ctx.fillStyle = '#333';
+                        ctx.fillRect(screenX + this.width / 2 - 40, this.y - 5, 80, 4);
+                        ctx.fillStyle = this.firstPowerupTimer < 180 ? '#ff4444' : '#ffaa00';
+                        ctx.fillRect(screenX + this.width / 2 - 40, this.y - 5, 80 * comboTimeLeft, 4);
+                    }
                 }
             }
             
             drawCharacter(ctx, era, isCrouching = false) {
                 const bounce = Math.abs(this.vx) > 0.5 ? Math.sin(this.animFrame * Math.PI / 2) * 3 : 0;
                 const breathe = Math.sin(Date.now() / 500) * 1;
+                const slideAnim = this.isSliding ? Math.sin(Date.now() / 100) * 2 : 0;
                 
                 // Smooth crouch animation
                 if (!this.crouchAnim) this.crouchAnim = 0;
@@ -3376,62 +4697,494 @@
                     this.crouchAnim = Math.max(0, this.crouchAnim - 0.15);
                 }
                 
-                // Crouch animation values - bent knees, lowered torso, tucked head
                 const crouchAmount = this.crouchAnim;
-                const kneesBent = crouchAmount * 20; // Knees bend outward
-                const torsoLower = crouchAmount * 15; // Torso drops down
-                const torsoLean = crouchAmount * 10; // Slight forward lean
-                const headDuck = crouchAmount * 18; // Head tucks down
-                const armsBrace = crouchAmount * 10; // Arms come forward
+                const torsoLean = crouchAmount * 10;
                 
-                // Common skin tone
-                const skinTone = '#e8c4a0';
-                const skinShadow = '#c9a080';
+                // Skin tones vary by era
+                const skinTones = {
+                    prehistoric: '#c9a080',
+                    ancient: '#d4a574', 
+                    medieval: '#e8c4a0',
+                    modern: '#e8c4a0'
+                };
                 
                 switch(currentLevel) {
-                    case 0: // 1500s - Renaissance Peasant/Traveler
-                        // Legs with cloth pants - BENT WHEN CROUCHING
-                        ctx.fillStyle = '#5c4a3a';
-                        if (isCrouching) {
-                            // Bent legs - thighs go horizontal, shins go down
-                            // Left thigh (horizontal)
-                            ctx.save();
-                            ctx.translate(-8, 10 + torsoLean);
-                            ctx.rotate(-Math.PI / 4);
-                            ctx.fillRect(0, 0, 18, 7);
-                            ctx.restore();
-                            // Left shin (down)
-                            ctx.fillRect(-4, 18 + torsoLean, 7, 14);
-                            // Right thigh
-                            ctx.save();
-                            ctx.translate(8, 10 + torsoLean);
-                            ctx.rotate(Math.PI / 4);
-                            ctx.fillRect(-18, 0, 18, 7);
-                            ctx.restore();
-                            // Right shin
-                            ctx.fillRect(-3, 18 + torsoLean, 7, 14);
-                        } else {
-                            ctx.fillRect(-8, 10 + bounce, 7, 20);
-                            ctx.fillRect(1, 10 + bounce + (Math.abs(this.vx) > 0.5 ? Math.sin(this.animFrame * Math.PI / 2) * 3 : 0), 7, 20);
+                    case 0: // DINOSAUR AGE - Caveman with fur and spear
+                        const dinoSkin = '#c9a080';
+                        // Fur loincloth
+                        ctx.fillStyle = '#8b7355';
+                        ctx.beginPath();
+                        ctx.moveTo(-12, 5 + bounce);
+                        ctx.lineTo(12, 5 + bounce);
+                        ctx.lineTo(10, 15 + bounce);
+                        ctx.lineTo(-10, 15 + bounce);
+                        ctx.fill();
+                        // Fur texture
+                        ctx.strokeStyle = '#6b5344';
+                        ctx.lineWidth = 1;
+                        for (let i = 0; i < 5; i++) {
+                            ctx.beginPath();
+                            ctx.moveTo(-8 + i * 4, 7 + bounce);
+                            ctx.lineTo(-8 + i * 4, 14 + bounce);
+                            ctx.stroke();
                         }
+                        // Muscular legs
+                        ctx.fillStyle = dinoSkin;
+                        ctx.fillRect(-10, 12 + bounce, 8, 18);
+                        ctx.fillRect(2, 12 + bounce, 8, 18);
+                        // Bare feet
+                        ctx.fillRect(-11, 28 + bounce, 10, 6);
+                        ctx.fillRect(1, 28 + bounce, 10, 6);
+                        // Muscular torso
+                        ctx.fillStyle = dinoSkin;
+                        ctx.beginPath();
+                        ctx.ellipse(0, -5 + bounce + breathe, 14, 18, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Chest details
+                        ctx.fillStyle = '#b89070';
+                        ctx.beginPath();
+                        ctx.arc(-5, -8 + bounce + breathe, 4, 0, Math.PI * 2);
+                        ctx.arc(5, -8 + bounce + breathe, 4, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Fur shoulder pads
+                        ctx.fillStyle = '#8b7355';
+                        ctx.beginPath();
+                        ctx.ellipse(-14, -12 + bounce, 6, 8, -0.3, 0, Math.PI * 2);
+                        ctx.ellipse(14, -12 + bounce, 6, 8, 0.3, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Arms
+                        ctx.fillStyle = dinoSkin;
+                        ctx.fillRect(-18, -10 + bounce, 6, 18);
+                        ctx.fillRect(12, -10 + bounce, 6, 18);
+                        // Big hands
+                        ctx.beginPath();
+                        ctx.arc(-15, 10 + bounce, 5, 0, Math.PI * 2);
+                        ctx.arc(15, 10 + bounce, 5, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Neck
+                        ctx.fillRect(-4, -22 + bounce + breathe, 8, 8);
+                        // Head - more primitive
+                        ctx.beginPath();
+                        ctx.ellipse(0, -32 + bounce + breathe, 12, 12, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Wild hair
+                        ctx.fillStyle = '#3a2a1a';
+                        ctx.beginPath();
+                        ctx.moveTo(-12, -35 + bounce);
+                        ctx.lineTo(-8, -48 + bounce);
+                        ctx.lineTo(-3, -38 + bounce);
+                        ctx.lineTo(3, -50 + bounce);
+                        ctx.lineTo(8, -38 + bounce);
+                        ctx.lineTo(12, -46 + bounce);
+                        ctx.lineTo(12, -32 + bounce);
+                        ctx.lineTo(-12, -32 + bounce);
+                        ctx.fill();
+                        // Beard
+                        ctx.beginPath();
+                        ctx.moveTo(-8, -25 + bounce + breathe);
+                        ctx.lineTo(0, -18 + bounce + breathe);
+                        ctx.lineTo(8, -25 + bounce + breathe);
+                        ctx.fill();
+                        // Eyes
+                        ctx.fillStyle = '#fff';
+                        ctx.beginPath();
+                        ctx.ellipse(-4, -34 + bounce + breathe, 3, 3, 0, 0, Math.PI * 2);
+                        ctx.ellipse(4, -34 + bounce + breathe, 3, 3, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.fillStyle = '#2a1a0a';
+                        ctx.beginPath();
+                        ctx.arc(-4, -34 + bounce + breathe, 1.5, 0, Math.PI * 2);
+                        ctx.arc(4, -34 + bounce + breathe, 1.5, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Primitive spear
+                        if (!this.isAttacking) {
+                            ctx.fillStyle = '#654321';
+                            ctx.fillRect(20, -45 + bounce, 4, 70);
+                            // Stone tip
+                            ctx.fillStyle = '#666';
+                            ctx.beginPath();
+                            ctx.moveTo(22, -45 + bounce);
+                            ctx.lineTo(18, -55 + bounce);
+                            ctx.lineTo(26, -55 + bounce);
+                            ctx.fill();
+                        }
+                        break;
                         
+                    case 1: // ICE AGE - Fur-clad hunter
+                        const iceSkin = '#d4b896';
+                        // Heavy fur boots
+                        ctx.fillStyle = '#5a4a3a';
+                        ctx.fillRect(-10, 22 + bounce, 9, 12);
+                        ctx.fillRect(1, 22 + bounce, 9, 12);
+                        // Fur trim
+                        ctx.fillStyle = '#8a7a6a';
+                        ctx.fillRect(-11, 22 + bounce, 11, 4);
+                        ctx.fillRect(0, 22 + bounce, 11, 4);
+                        // Fur pants
+                        ctx.fillStyle = '#6a5a4a';
+                        ctx.fillRect(-9, 8 + bounce, 8, 16);
+                        ctx.fillRect(1, 8 + bounce, 8, 16);
+                        // Heavy fur coat
+                        ctx.fillStyle = '#7a6a5a';
+                        ctx.beginPath();
+                        ctx.moveTo(-16, -18 + bounce + breathe);
+                        ctx.lineTo(16, -18 + bounce + breathe);
+                        ctx.lineTo(14, 10 + bounce);
+                        ctx.lineTo(-14, 10 + bounce);
+                        ctx.fill();
+                        // Fur collar
+                        ctx.fillStyle = '#9a8a7a';
+                        ctx.beginPath();
+                        ctx.ellipse(0, -16 + bounce + breathe, 14, 6, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Face
+                        ctx.fillStyle = iceSkin;
+                        ctx.beginPath();
+                        ctx.ellipse(0, -30 + bounce + breathe, 10, 11, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Fur hood
+                        ctx.fillStyle = '#8a7a6a';
+                        ctx.beginPath();
+                        ctx.arc(0, -32 + bounce + breathe, 14, Math.PI, 0);
+                        ctx.fill();
+                        // Hood fur trim
+                        ctx.fillStyle = '#aaa';
+                        ctx.beginPath();
+                        ctx.ellipse(0, -20 + bounce + breathe, 12, 4, 0, Math.PI, Math.PI * 2);
+                        ctx.fill();
+                        // Eyes
+                        ctx.fillStyle = '#4a6a8a';
+                        ctx.beginPath();
+                        ctx.arc(-4, -32 + bounce + breathe, 2, 0, Math.PI * 2);
+                        ctx.arc(4, -32 + bounce + breathe, 2, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Fur mittens
+                        ctx.fillStyle = '#7a6a5a';
+                        ctx.beginPath();
+                        ctx.ellipse(-16, 5 + bounce, 5, 6, 0, 0, Math.PI * 2);
+                        ctx.ellipse(16, 5 + bounce, 5, 6, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Club weapon
+                        if (!this.isAttacking) {
+                            ctx.fillStyle = '#5a4a3a';
+                            ctx.fillRect(20, -30 + bounce, 6, 50);
+                            // Club head
+                            ctx.beginPath();
+                            ctx.ellipse(23, -35 + bounce, 10, 12, 0, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                        break;
+                        
+                    case 2: // ANCIENT EGYPT - Desert nomad with headdress
+                        const egyptSkin = '#c9a574';
+                        // Sandals
+                        ctx.fillStyle = '#8b7355';
+                        ctx.fillRect(-9, 28 + bounce, 8, 5);
+                        ctx.fillRect(1, 28 + bounce, 8, 5);
+                        // White linen kilt
+                        ctx.fillStyle = '#f5f5dc';
+                        ctx.beginPath();
+                        ctx.moveTo(-12, 5 + bounce);
+                        ctx.lineTo(12, 5 + bounce);
+                        ctx.lineTo(14, 28 + bounce);
+                        ctx.lineTo(-14, 28 + bounce);
+                        ctx.fill();
+                        // Gold belt
+                        ctx.fillStyle = '#ffd700';
+                        ctx.fillRect(-12, 4 + bounce, 24, 4);
+                        // Bare chest
+                        ctx.fillStyle = egyptSkin;
+                        ctx.beginPath();
+                        ctx.moveTo(-12, -15 + bounce + breathe);
+                        ctx.lineTo(12, -15 + bounce + breathe);
+                        ctx.lineTo(10, 6 + bounce);
+                        ctx.lineTo(-10, 6 + bounce);
+                        ctx.fill();
+                        // Gold collar necklace
+                        ctx.fillStyle = '#ffd700';
+                        ctx.beginPath();
+                        ctx.ellipse(0, -14 + bounce + breathe, 12, 5, 0, 0, Math.PI);
+                        ctx.fill();
+                        ctx.fillStyle = '#00aaff';
+                        ctx.beginPath();
+                        ctx.ellipse(0, -12 + bounce + breathe, 8, 3, 0, 0, Math.PI);
+                        ctx.fill();
+                        // Arms
+                        ctx.fillStyle = egyptSkin;
+                        ctx.fillRect(-16, -12 + bounce, 5, 16);
+                        ctx.fillRect(11, -12 + bounce, 5, 16);
+                        // Gold armbands
+                        ctx.fillStyle = '#ffd700';
+                        ctx.fillRect(-16, -8 + bounce, 5, 3);
+                        ctx.fillRect(11, -8 + bounce, 5, 3);
+                        // Hands
+                        ctx.fillStyle = egyptSkin;
+                        ctx.beginPath();
+                        ctx.arc(-14, 6 + bounce, 4, 0, Math.PI * 2);
+                        ctx.arc(14, 6 + bounce, 4, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Head
+                        ctx.beginPath();
+                        ctx.ellipse(0, -30 + bounce + breathe, 9, 11, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Nemes headdress (striped)
+                        ctx.fillStyle = '#ffd700';
+                        ctx.beginPath();
+                        ctx.moveTo(-12, -25 + bounce + breathe);
+                        ctx.lineTo(0, -45 + bounce + breathe);
+                        ctx.lineTo(12, -25 + bounce + breathe);
+                        ctx.lineTo(14, -15 + bounce + breathe);
+                        ctx.lineTo(-14, -15 + bounce + breathe);
+                        ctx.fill();
+                        // Stripes
+                        ctx.fillStyle = '#1a1a8a';
+                        for (let i = 0; i < 4; i++) {
+                            ctx.fillRect(-10 + i * 5, -42 + i * 6 + bounce + breathe, 3, 8);
+                        }
+                        // Eyes with kohl
+                        ctx.fillStyle = '#000';
+                        ctx.fillRect(-6, -32 + bounce + breathe, 5, 2);
+                        ctx.fillRect(1, -32 + bounce + breathe, 5, 2);
+                        ctx.fillStyle = '#3a2a1a';
+                        ctx.beginPath();
+                        ctx.arc(-4, -31 + bounce + breathe, 1.5, 0, Math.PI * 2);
+                        ctx.arc(4, -31 + bounce + breathe, 1.5, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Khopesh sword
+                        if (!this.isAttacking) {
+                            ctx.fillStyle = '#cd7f32';
+                            ctx.fillRect(18, -20 + bounce, 3, 30);
+                            ctx.beginPath();
+                            ctx.moveTo(21, -20 + bounce);
+                            ctx.quadraticCurveTo(35, -25 + bounce, 30, -10 + bounce);
+                            ctx.lineTo(21, -10 + bounce);
+                            ctx.fill();
+                        }
+                        break;
+                        
+                    case 3: // ANCIENT GREECE - Spartan warrior
+                        const greekSkin = '#e0c4a0';
+                        // Sandals with straps
+                        ctx.fillStyle = '#8b4513';
+                        ctx.fillRect(-9, 26 + bounce, 8, 8);
+                        ctx.fillRect(1, 26 + bounce, 8, 8);
+                        // Leg straps
+                        ctx.strokeStyle = '#8b4513';
+                        ctx.lineWidth = 2;
+                        for (let i = 0; i < 3; i++) {
+                            ctx.beginPath();
+                            ctx.moveTo(-9, 12 + i * 5 + bounce);
+                            ctx.lineTo(-1, 12 + i * 5 + bounce);
+                            ctx.moveTo(1, 12 + i * 5 + bounce);
+                            ctx.lineTo(9, 12 + i * 5 + bounce);
+                            ctx.stroke();
+                        }
+                        // Muscular legs
+                        ctx.fillStyle = greekSkin;
+                        ctx.fillRect(-8, 8 + bounce, 7, 20);
+                        ctx.fillRect(1, 8 + bounce, 7, 20);
+                        // Red tunic/pteruges
+                        ctx.fillStyle = '#8b0000';
+                        ctx.beginPath();
+                        ctx.moveTo(-14, -5 + bounce);
+                        ctx.lineTo(14, -5 + bounce);
+                        ctx.lineTo(12, 10 + bounce);
+                        ctx.lineTo(-12, 10 + bounce);
+                        ctx.fill();
+                        // Leather strips
+                        ctx.fillStyle = '#654321';
+                        for (let i = 0; i < 5; i++) {
+                            ctx.fillRect(-10 + i * 5, 6 + bounce, 3, 8);
+                        }
+                        // Bronze breastplate
+                        ctx.fillStyle = '#cd7f32';
+                        ctx.beginPath();
+                        ctx.moveTo(-12, -20 + bounce + breathe);
+                        ctx.lineTo(12, -20 + bounce + breathe);
+                        ctx.lineTo(10, -3 + bounce);
+                        ctx.lineTo(-10, -3 + bounce);
+                        ctx.fill();
+                        // Muscle detail on armor
+                        ctx.strokeStyle = '#a06020';
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.arc(-4, -12 + bounce + breathe, 4, 0, Math.PI);
+                        ctx.arc(4, -12 + bounce + breathe, 4, 0, Math.PI);
+                        ctx.stroke();
+                        // Arms
+                        ctx.fillStyle = greekSkin;
+                        ctx.fillRect(-16, -15 + bounce, 5, 18);
+                        ctx.fillRect(11, -15 + bounce, 5, 18);
+                        // Hands
+                        ctx.beginPath();
+                        ctx.arc(-14, 5 + bounce, 4, 0, Math.PI * 2);
+                        ctx.arc(14, 5 + bounce, 4, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Corinthian helmet
+                        ctx.fillStyle = '#cd7f32';
+                        ctx.beginPath();
+                        ctx.ellipse(0, -35 + bounce + breathe, 11, 13, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Helmet crest
+                        ctx.fillStyle = '#8b0000';
+                        ctx.beginPath();
+                        ctx.moveTo(-2, -48 + bounce + breathe);
+                        ctx.lineTo(2, -48 + bounce + breathe);
+                        ctx.lineTo(2, -28 + bounce + breathe);
+                        ctx.lineTo(-2, -28 + bounce + breathe);
+                        ctx.fill();
+                        // Plume
+                        for (let i = 0; i < 8; i++) {
+                            ctx.fillRect(-1, -55 + i * 3 + bounce + breathe, 2, 4);
+                        }
+                        // Face opening
+                        ctx.fillStyle = greekSkin;
+                        ctx.beginPath();
+                        ctx.ellipse(0, -32 + bounce + breathe, 6, 8, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Eyes
+                        ctx.fillStyle = '#2a1a0a';
+                        ctx.beginPath();
+                        ctx.arc(-2, -33 + bounce + breathe, 1.5, 0, Math.PI * 2);
+                        ctx.arc(2, -33 + bounce + breathe, 1.5, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Sword and shield
+                        if (!this.isAttacking) {
+                            // Shield (behind)
+                            ctx.fillStyle = '#cd7f32';
+                            ctx.beginPath();
+                            ctx.arc(-18, -5 + bounce, 14, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.fillStyle = '#8b0000';
+                            ctx.beginPath();
+                            ctx.arc(-18, -5 + bounce, 10, 0, Math.PI * 2);
+                            ctx.fill();
+                            // Lambda symbol
+                            ctx.strokeStyle = '#ffd700';
+                            ctx.lineWidth = 2;
+                            ctx.beginPath();
+                            ctx.moveTo(-22, 2 + bounce);
+                            ctx.lineTo(-18, -12 + bounce);
+                            ctx.lineTo(-14, 2 + bounce);
+                            ctx.stroke();
+                            // Sword
+                            ctx.fillStyle = '#c0c0c0';
+                            ctx.fillRect(18, -30 + bounce, 3, 40);
+                            ctx.fillStyle = '#8b4513';
+                            ctx.fillRect(16, 8 + bounce, 7, 8);
+                        }
+                        break;
+                        
+                    case 4: // VIKING AGE - Norse berserker
+                        const vikingSkin = '#e8d4c0';
+                        // Fur boots
+                        ctx.fillStyle = '#4a3a2a';
+                        ctx.fillRect(-10, 22 + bounce, 9, 12);
+                        ctx.fillRect(1, 22 + bounce, 9, 12);
+                        // Wool pants
+                        ctx.fillStyle = '#3a4a3a';
+                        ctx.fillRect(-9, 5 + bounce, 8, 18);
+                        ctx.fillRect(1, 5 + bounce, 8, 18);
+                        // Chainmail tunic
+                        ctx.fillStyle = '#707070';
+                        ctx.beginPath();
+                        ctx.moveTo(-14, -18 + bounce + breathe);
+                        ctx.lineTo(14, -18 + bounce + breathe);
+                        ctx.lineTo(12, 8 + bounce);
+                        ctx.lineTo(-12, 8 + bounce);
+                        ctx.fill();
+                        // Chainmail pattern
+                        ctx.fillStyle = '#888';
+                        for (let y = 0; y < 4; y++) {
+                            for (let x = 0; x < 5; x++) {
+                                ctx.beginPath();
+                                ctx.arc(-10 + x * 5, -15 + y * 6 + bounce + breathe, 2, 0, Math.PI * 2);
+                                ctx.fill();
+                            }
+                        }
+                        // Leather belt
+                        ctx.fillStyle = '#5a4030';
+                        ctx.fillRect(-13, 3 + bounce, 26, 4);
+                        ctx.fillStyle = '#c0c0c0';
+                        ctx.fillRect(-2, 3 + bounce, 4, 4);
+                        // Fur cape
+                        ctx.fillStyle = '#5a4a3a';
+                        ctx.beginPath();
+                        ctx.moveTo(-16, -16 + bounce + breathe);
+                        ctx.lineTo(-20, 15 + bounce);
+                        ctx.lineTo(-14, 10 + bounce);
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.moveTo(16, -16 + bounce + breathe);
+                        ctx.lineTo(20, 15 + bounce);
+                        ctx.lineTo(14, 10 + bounce);
+                        ctx.fill();
+                        // Arms
+                        ctx.fillStyle = vikingSkin;
+                        ctx.fillRect(-18, -12 + bounce, 5, 16);
+                        ctx.fillRect(13, -12 + bounce, 5, 16);
+                        // Bracers
+                        ctx.fillStyle = '#5a4030';
+                        ctx.fillRect(-18, -2 + bounce, 5, 6);
+                        ctx.fillRect(13, -2 + bounce, 5, 6);
+                        // Hands
+                        ctx.fillStyle = vikingSkin;
+                        ctx.beginPath();
+                        ctx.arc(-16, 6 + bounce, 4, 0, Math.PI * 2);
+                        ctx.arc(16, 6 + bounce, 4, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Head
+                        ctx.beginPath();
+                        ctx.ellipse(0, -32 + bounce + breathe, 10, 12, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Viking helmet
+                        ctx.fillStyle = '#707070';
+                        ctx.beginPath();
+                        ctx.arc(0, -38 + bounce + breathe, 11, Math.PI, 0);
+                        ctx.fill();
+                        // Nose guard
+                        ctx.fillRect(-2, -38 + bounce + breathe, 4, 12);
+                        // Beard (red/blonde)
+                        ctx.fillStyle = '#c47030';
+                        ctx.beginPath();
+                        ctx.moveTo(-8, -28 + bounce + breathe);
+                        ctx.lineTo(0, -18 + bounce + breathe);
+                        ctx.lineTo(8, -28 + bounce + breathe);
+                        ctx.lineTo(6, -22 + bounce + breathe);
+                        ctx.lineTo(0, -15 + bounce + breathe);
+                        ctx.lineTo(-6, -22 + bounce + breathe);
+                        ctx.fill();
+                        // Eyes
+                        ctx.fillStyle = '#5a8aaa';
+                        ctx.beginPath();
+                        ctx.arc(-4, -35 + bounce + breathe, 2, 0, Math.PI * 2);
+                        ctx.arc(4, -35 + bounce + breathe, 2, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Battle axe
+                        if (!this.isAttacking) {
+                            ctx.fillStyle = '#5a4030';
+                            ctx.fillRect(20, -35 + bounce, 4, 55);
+                            ctx.fillStyle = '#c0c0c0';
+                            ctx.beginPath();
+                            ctx.moveTo(24, -30 + bounce);
+                            ctx.quadraticCurveTo(40, -25 + bounce, 38, -10 + bounce);
+                            ctx.lineTo(24, -15 + bounce);
+                            ctx.fill();
+                        }
+                        break;
+                        
+                    case 5: // RENAISSANCE - Peasant traveler with staff
+                        const renSkin = '#e8c4a0';
+                        // Cloth pants
+                        ctx.fillStyle = '#5c4a3a';
+                        ctx.fillRect(-8, 10 + bounce, 7, 20);
+                        ctx.fillRect(1, 10 + bounce, 7, 20);
                         // Boots
                         ctx.fillStyle = '#3d2914';
-                        if (isCrouching) {
-                            ctx.fillRect(-6, 30 + torsoLean, 9, 6);
-                            ctx.fillRect(-2, 30 + torsoLean, 9, 6);
-                        } else {
-                            ctx.fillRect(-9, 28 + bounce, 9, 6);
-                            ctx.fillRect(0, 28 + bounce, 9, 6);
-                        }
-                        
-                        // Body - tunic (LEANING FORWARD WHEN CROUCHING)
+                        ctx.fillRect(-9, 28 + bounce, 9, 6);
+                        ctx.fillRect(0, 28 + bounce, 9, 6);
+                        // Tunic
                         ctx.fillStyle = '#8b7355';
-                        ctx.save();
-                        if (isCrouching) {
-                            ctx.translate(0, torsoLean / 2);
-                            ctx.rotate(0.3); // Lean forward
-                        }
                         ctx.beginPath();
                         ctx.moveTo(-15, -15 + bounce + breathe);
                         ctx.lineTo(15, -15 + bounce + breathe);
@@ -3439,138 +5192,55 @@
                         ctx.lineTo(-12, 12 + bounce);
                         ctx.closePath();
                         ctx.fill();
-                        
                         // Belt
                         ctx.fillStyle = '#4a3a2a';
                         ctx.fillRect(-13, 2 + bounce, 26, 5);
                         ctx.fillStyle = '#ffd700';
                         ctx.fillRect(-2, 3 + bounce, 4, 3);
-                        ctx.restore();
-                        
-                        // Arms (more forward when crouching)
+                        // Arms
                         ctx.fillStyle = '#8b7355';
-                        if (isCrouching) {
-                            ctx.save();
-                            ctx.translate(-15, -5 + torsoLean);
-                            ctx.rotate(-0.5);
-                            ctx.fillRect(0, 0, 6, 18);
-                            ctx.restore();
-                            ctx.save();
-                            ctx.translate(9, -5 + torsoLean);
-                            ctx.rotate(0.5);
-                            ctx.fillRect(0, 0, 6, 18);
-                            ctx.restore();
-                        } else {
-                            ctx.fillRect(-18, -12 + bounce, 6, 18);
-                            ctx.fillRect(12, -12 + bounce, 6, 18);
-                        }
+                        ctx.fillRect(-18, -12 + bounce, 6, 18);
+                        ctx.fillRect(12, -12 + bounce, 6, 18);
                         // Hands
-                        ctx.fillStyle = skinTone;
+                        ctx.fillStyle = renSkin;
                         ctx.beginPath();
-                        if (isCrouching) {
-                            ctx.arc(-10, 15 + torsoLean, 4, 0, Math.PI * 2);
-                            ctx.arc(10, 15 + torsoLean, 4, 0, Math.PI * 2);
-                        } else {
-                            ctx.arc(-15, 8 + bounce, 4, 0, Math.PI * 2);
-                            ctx.arc(15, 8 + bounce, 4, 0, Math.PI * 2);
-                        }
+                        ctx.arc(-15, 8 + bounce, 4, 0, Math.PI * 2);
+                        ctx.arc(15, 8 + bounce, 4, 0, Math.PI * 2);
                         ctx.fill();
-                        
                         // Neck
-                        ctx.fillStyle = skinTone;
-                        if (isCrouching) {
-                            ctx.save();
-                            ctx.translate(5, -10 + torsoLean);
-                            ctx.rotate(0.3);
-                            ctx.fillRect(-4, 0, 8, 8);
-                            ctx.restore();
-                        } else {
-                            ctx.fillRect(-4, -22 + bounce + breathe, 8, 8);
-                        }
-                        
-                        // Head (ducked when crouching)
-                        ctx.fillStyle = skinTone;
+                        ctx.fillRect(-4, -22 + bounce + breathe, 8, 8);
+                        // Head
                         ctx.beginPath();
-                        if (isCrouching) {
-                            ctx.ellipse(8, -15 + torsoLean, 11, 13, 0.3, 0, Math.PI * 2);
-                        } else {
-                            ctx.ellipse(0, -32 + bounce + breathe, 11, 13, 0, 0, Math.PI * 2);
-                        }
+                        ctx.ellipse(0, -32 + bounce + breathe, 11, 13, 0, 0, Math.PI * 2);
                         ctx.fill();
-                        
                         // Hair
                         ctx.fillStyle = '#4a3020';
                         ctx.beginPath();
-                        if (isCrouching) {
-                            ctx.ellipse(8, -21 + torsoLean, 10, 8, 0.3, Math.PI, Math.PI * 2);
-                            ctx.fill();
-                            ctx.fillRect(-1, -21 + torsoLean, 4, 10);
-                            ctx.fillRect(14, -21 + torsoLean, 4, 10);
-                        } else {
-                            ctx.ellipse(0, -38 + bounce + breathe, 10, 8, 0, Math.PI, Math.PI * 2);
-                            ctx.fill();
-                            ctx.fillRect(-10, -38 + bounce + breathe, 4, 10);
-                            ctx.fillRect(6, -38 + bounce + breathe, 4, 10);
-                        }
-                        
-                        // Face
-                        ctx.fillStyle = '#2a1a10';
+                        ctx.ellipse(0, -38 + bounce + breathe, 10, 8, 0, Math.PI, Math.PI * 2);
+                        ctx.fill();
                         // Eyes
+                        ctx.fillStyle = '#2a1a10';
                         ctx.beginPath();
-                        if (isCrouching) {
-                            ctx.ellipse(4, -16 + torsoLean, 2, 2.5, 0.3, 0, Math.PI * 2);
-                            ctx.ellipse(12, -16 + torsoLean, 2, 2.5, 0.3, 0, Math.PI * 2);
-                        } else {
-                            ctx.ellipse(-4, -33 + bounce + breathe, 2, 2.5, 0, 0, Math.PI * 2);
-                            ctx.ellipse(4, -33 + bounce + breathe, 2, 2.5, 0, 0, Math.PI * 2);
-                        }
+                        ctx.ellipse(-4, -33 + bounce + breathe, 2, 2.5, 0, 0, Math.PI * 2);
+                        ctx.ellipse(4, -33 + bounce + breathe, 2, 2.5, 0, 0, Math.PI * 2);
                         ctx.fill();
-                        // Eye shine
-                        ctx.fillStyle = '#fff';
-                        ctx.beginPath();
-                        if (isCrouching) {
-                            ctx.arc(5, -17 + torsoLean, 0.8, 0, Math.PI * 2);
-                            ctx.arc(13, -17 + torsoLean, 0.8, 0, Math.PI * 2);
-                        } else {
-                            ctx.arc(-3, -34 + bounce + breathe, 0.8, 0, Math.PI * 2);
-                            ctx.arc(5, -34 + bounce + breathe, 0.8, 0, Math.PI * 2);
-                        }
-                        ctx.fill();
-                        
-                        // Staff (weapon) - held forward when crouching
+                        // Staff
                         if (!this.isAttacking) {
                             ctx.fillStyle = '#654321';
-                            if (isCrouching) {
-                                ctx.save();
-                                ctx.translate(15, -5 + torsoLean);
-                                ctx.rotate(0.8);
-                                ctx.fillRect(0, -40, 4, 75);
-                                ctx.fillStyle = '#8B4513';
-                                ctx.beginPath();
-                                ctx.arc(2, -42, 6, 0, Math.PI * 2);
-                                ctx.fill();
-                                ctx.restore();
-                            } else {
-                                ctx.fillRect(20, -40 + bounce, 4, 75);
-                                ctx.fillStyle = '#8B4513';
-                                ctx.beginPath();
-                                ctx.arc(22, -42 + bounce, 6, 0, Math.PI * 2);
-                                ctx.fill();
-                            }
-                        } else {
-                            ctx.save();
-                            ctx.rotate(-Math.PI / 3);
-                            ctx.fillStyle = '#654321';
-                            ctx.fillRect(15, -25, 4, 75);
-                            ctx.restore();
+                            ctx.fillRect(20, -40 + bounce, 4, 75);
+                            ctx.fillStyle = '#8B4513';
+                            ctx.beginPath();
+                            ctx.arc(22, -42 + bounce, 6, 0, Math.PI * 2);
+                            ctx.fill();
                         }
                         break;
                         
-                    case 1: // 1700s - Colonial Merchant
-                        // Legs with breeches
+                    case 6: // COLONIAL - Merchant with tricorn hat
+                        const colSkin = '#e8c4a0';
+                        // Breeches
                         ctx.fillStyle = '#2a2a3a';
                         ctx.fillRect(-8, 8 + bounce, 7, 16);
-                        ctx.fillRect(1, 8 + bounce + (Math.abs(this.vx) > 0.5 ? Math.sin(this.animFrame * Math.PI / 2) * 3 : 0), 7, 16);
+                        ctx.fillRect(1, 8 + bounce, 7, 16);
                         // Stockings
                         ctx.fillStyle = '#ddd';
                         ctx.fillRect(-8, 22 + bounce, 7, 8);
@@ -3582,17 +5252,15 @@
                         ctx.fillStyle = '#c0c0c0';
                         ctx.fillRect(-6, 29 + bounce, 3, 3);
                         ctx.fillRect(3, 29 + bounce, 3, 3);
-                        
-                        // Body - waistcoat
+                        // Waistcoat
                         ctx.fillStyle = '#8b0000';
                         ctx.beginPath();
                         ctx.moveTo(-14, -15 + bounce + breathe);
                         ctx.lineTo(14, -15 + bounce + breathe);
                         ctx.lineTo(11, 10 + bounce);
                         ctx.lineTo(-11, 10 + bounce);
-                        ctx.closePath();
                         ctx.fill();
-                        // Coat
+                        // Coat tails
                         ctx.fillStyle = '#1a2a4a';
                         ctx.fillRect(-16, -14 + bounce + breathe, 5, 25);
                         ctx.fillRect(11, -14 + bounce + breathe, 5, 25);
@@ -3603,7 +5271,6 @@
                             ctx.arc(0, -10 + i * 5 + bounce + breathe, 1.5, 0, Math.PI * 2);
                             ctx.fill();
                         }
-                        
                         // Cravat
                         ctx.fillStyle = '#fff';
                         ctx.beginPath();
@@ -3611,7 +5278,6 @@
                         ctx.lineTo(5, -16 + bounce + breathe);
                         ctx.lineTo(0, -10 + bounce + breathe);
                         ctx.fill();
-                        
                         // Arms
                         ctx.fillStyle = '#1a2a4a';
                         ctx.fillRect(-20, -12 + bounce, 6, 16);
@@ -3621,424 +5287,282 @@
                         ctx.fillRect(-20, 2 + bounce, 6, 4);
                         ctx.fillRect(14, 2 + bounce, 6, 4);
                         // Hands
-                        ctx.fillStyle = skinTone;
+                        ctx.fillStyle = colSkin;
                         ctx.beginPath();
                         ctx.arc(-17, 8 + bounce, 4, 0, Math.PI * 2);
                         ctx.arc(17, 8 + bounce, 4, 0, Math.PI * 2);
                         ctx.fill();
-                        
-                        // Neck
-                        ctx.fillStyle = skinTone;
-                        ctx.fillRect(-4, -22 + bounce + breathe, 8, 7);
-                        
                         // Head
-                        ctx.fillStyle = skinTone;
+                        ctx.fillRect(-4, -22 + bounce + breathe, 8, 7);
                         ctx.beginPath();
                         ctx.ellipse(0, -32 + bounce + breathe, 10, 12, 0, 0, Math.PI * 2);
                         ctx.fill();
-                        
-                        // Wig
-                        ctx.fillStyle = '#eee';
-                        ctx.beginPath();
-                        ctx.ellipse(0, -38 + bounce + breathe, 11, 8, 0, Math.PI, Math.PI * 2);
-                        ctx.fill();
-                        ctx.fillRect(-11, -38 + bounce + breathe, 5, 15);
-                        ctx.fillRect(6, -38 + bounce + breathe, 5, 15);
-                        // Wig curls
-                        ctx.beginPath();
-                        ctx.arc(-9, -24 + bounce + breathe, 3, 0, Math.PI * 2);
-                        ctx.arc(9, -24 + bounce + breathe, 3, 0, Math.PI * 2);
-                        ctx.fill();
-                        
                         // Tricorn hat
-                        ctx.fillStyle = '#1a1a2a';
+                        ctx.fillStyle = '#1a1a1a';
                         ctx.beginPath();
-                        ctx.moveTo(-14, -42 + bounce + breathe);
-                        ctx.lineTo(14, -42 + bounce + breathe);
-                        ctx.lineTo(0, -55 + bounce + breathe);
-                        ctx.closePath();
+                        ctx.moveTo(-14, -38 + bounce + breathe);
+                        ctx.lineTo(0, -50 + bounce + breathe);
+                        ctx.lineTo(14, -38 + bounce + breathe);
+                        ctx.lineTo(0, -42 + bounce + breathe);
                         ctx.fill();
-                        ctx.fillRect(-12, -44 + bounce + breathe, 24, 4);
-                        
-                        // Face
+                        // Eyes
                         ctx.fillStyle = '#2a1a10';
                         ctx.beginPath();
-                        ctx.ellipse(-4, -33 + bounce + breathe, 2, 2, 0, 0, Math.PI * 2);
-                        ctx.ellipse(4, -33 + bounce + breathe, 2, 2, 0, 0, Math.PI * 2);
+                        ctx.arc(-4, -33 + bounce + breathe, 2, 0, Math.PI * 2);
+                        ctx.arc(4, -33 + bounce + breathe, 2, 0, Math.PI * 2);
                         ctx.fill();
-                        ctx.fillStyle = '#fff';
-                        ctx.beginPath();
-                        ctx.arc(-3, -34 + bounce + breathe, 0.7, 0, Math.PI * 2);
-                        ctx.arc(5, -34 + bounce + breathe, 0.7, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.fillStyle = skinShadow;
-                        ctx.beginPath();
-                        ctx.moveTo(0, -32 + bounce + breathe);
-                        ctx.lineTo(-2, -27 + bounce + breathe);
-                        ctx.lineTo(2, -27 + bounce + breathe);
-                        ctx.fill();
-                        ctx.fillStyle = '#8b5a5a';
-                        ctx.beginPath();
-                        ctx.ellipse(0, -24 + bounce + breathe, 2.5, 1.2, 0, 0, Math.PI);
-                        ctx.fill();
-                        
-                        // Flintlock pistol
-                        if (this.isAttacking || this.canShoot) {
-                            ctx.fillStyle = '#3a3a3a';
-                            ctx.fillRect(18, -8 + bounce, 25, 6);
-                            ctx.fillStyle = '#654321';
-                            ctx.fillRect(18, -2 + bounce, 12, 8);
+                        // Pistol
+                        if (!this.isAttacking) {
+                            ctx.fillStyle = '#4a3a2a';
+                            ctx.fillRect(18, -5 + bounce, 20, 6);
+                            ctx.fillRect(18, -5 + bounce, 6, 15);
+                            ctx.fillStyle = '#666';
+                            ctx.fillRect(30, -3 + bounce, 12, 3);
                         }
                         break;
                         
-                    case 2: // 1900s - Steam Inventor
-                        // Legs with work pants
+                    case 7: // INDUSTRIAL - Steam inventor with goggles
+                        const indSkin = '#e8c4a0';
+                        // Work pants
                         ctx.fillStyle = '#3a3530';
-                        ctx.fillRect(-8, 10 + bounce, 7, 18);
-                        ctx.fillRect(1, 10 + bounce + (Math.abs(this.vx) > 0.5 ? Math.sin(this.animFrame * Math.PI / 2) * 3 : 0), 7, 18);
+                        ctx.fillRect(-8, 8 + bounce, 7, 20);
+                        ctx.fillRect(1, 8 + bounce, 7, 20);
                         // Work boots
                         ctx.fillStyle = '#2a2520';
                         ctx.fillRect(-10, 26 + bounce, 10, 8);
                         ctx.fillRect(0, 26 + bounce, 10, 8);
-                        ctx.fillStyle = '#cd7f32';
-                        ctx.fillRect(-8, 27 + bounce, 2, 4);
-                        ctx.fillRect(6, 27 + bounce, 2, 4);
-                        
-                        // Body - work vest
+                        // Vest
                         ctx.fillStyle = '#4a4035';
                         ctx.beginPath();
                         ctx.moveTo(-14, -15 + bounce + breathe);
                         ctx.lineTo(14, -15 + bounce + breathe);
-                        ctx.lineTo(12, 12 + bounce);
-                        ctx.lineTo(-12, 12 + bounce);
-                        ctx.closePath();
+                        ctx.lineTo(11, 10 + bounce);
+                        ctx.lineTo(-11, 10 + bounce);
                         ctx.fill();
-                        // Suspenders
-                        ctx.fillStyle = '#2a2520';
-                        ctx.fillRect(-10, -14 + bounce + breathe, 3, 26);
-                        ctx.fillRect(7, -14 + bounce + breathe, 3, 26);
-                        // Brass buckles
-                        ctx.fillStyle = '#cd7f32';
-                        ctx.fillRect(-10, -2 + bounce, 3, 3);
-                        ctx.fillRect(7, -2 + bounce, 3, 3);
-                        
-                        // Arms - rolled sleeves
+                        // Shirt underneath
                         ctx.fillStyle = '#ddd';
-                        ctx.fillRect(-18, -12 + bounce, 6, 10);
-                        ctx.fillRect(12, -12 + bounce, 6, 10);
-                        ctx.fillStyle = skinTone;
-                        ctx.fillRect(-18, -2 + bounce, 6, 8);
-                        ctx.fillRect(12, -2 + bounce, 6, 8);
-                        // Mechanical arm (right)
-                        ctx.fillStyle = '#666';
-                        ctx.fillRect(12, -2 + bounce, 8, 10);
-                        ctx.fillStyle = '#cd7f32';
+                        ctx.fillRect(-8, -14 + bounce + breathe, 16, 20);
+                        // Suspenders
+                        ctx.fillStyle = '#654321';
+                        ctx.fillRect(-10, -15 + bounce + breathe, 3, 25);
+                        ctx.fillRect(7, -15 + bounce + breathe, 3, 25);
+                        // Tool belt
+                        ctx.fillStyle = '#5a4a3a';
+                        ctx.fillRect(-13, 5 + bounce, 26, 5);
+                        // Wrench on belt
+                        ctx.fillStyle = '#888';
+                        ctx.fillRect(8, 3 + bounce, 3, 10);
+                        // Arms
+                        ctx.fillStyle = '#ddd';
+                        ctx.fillRect(-18, -12 + bounce, 6, 16);
+                        ctx.fillRect(12, -12 + bounce, 6, 16);
+                        // Hands
+                        ctx.fillStyle = indSkin;
                         ctx.beginPath();
-                        ctx.arc(16, 2 + bounce, 3, 0, Math.PI * 2);
+                        ctx.arc(-15, 6 + bounce, 4, 0, Math.PI * 2);
+                        ctx.arc(15, 6 + bounce, 4, 0, Math.PI * 2);
                         ctx.fill();
-                        // Left hand
-                        ctx.fillStyle = skinTone;
-                        ctx.beginPath();
-                        ctx.arc(-15, 8 + bounce, 4, 0, Math.PI * 2);
-                        ctx.fill();
-                        
-                        // Neck
-                        ctx.fillStyle = skinTone;
-                        ctx.fillRect(-4, -22 + bounce + breathe, 8, 8);
-                        
                         // Head
-                        ctx.fillStyle = skinTone;
+                        ctx.fillRect(-4, -22 + bounce + breathe, 8, 7);
                         ctx.beginPath();
                         ctx.ellipse(0, -32 + bounce + breathe, 10, 12, 0, 0, Math.PI * 2);
                         ctx.fill();
-                        
-                        // Hair - slicked back
-                        ctx.fillStyle = '#2a1a10';
+                        // Mustache
+                        ctx.fillStyle = '#4a3020';
                         ctx.beginPath();
-                        ctx.ellipse(0, -40 + bounce + breathe, 9, 6, 0, Math.PI, Math.PI * 2);
+                        ctx.moveTo(-8, -28 + bounce + breathe);
+                        ctx.quadraticCurveTo(-10, -25, -12, -26);
+                        ctx.quadraticCurveTo(-8, -28, 0, -28 + bounce + breathe);
+                        ctx.quadraticCurveTo(8, -28, 12, -26);
+                        ctx.quadraticCurveTo(10, -25, 8, -28 + bounce + breathe);
                         ctx.fill();
-                        
                         // Goggles on forehead
-                        ctx.fillStyle = '#cd7f32';
-                        ctx.fillRect(-12, -42 + bounce + breathe, 24, 5);
-                        ctx.fillStyle = '#88ccff';
+                        ctx.fillStyle = '#8B4513';
+                        ctx.fillRect(-12, -42 + bounce + breathe, 24, 6);
+                        ctx.fillStyle = '#4fc3f7';
                         ctx.beginPath();
-                        ctx.arc(-5, -39 + bounce + breathe, 5, 0, Math.PI * 2);
-                        ctx.arc(5, -39 + bounce + breathe, 5, 0, Math.PI * 2);
+                        ctx.arc(-6, -39 + bounce + breathe, 4, 0, Math.PI * 2);
+                        ctx.arc(6, -39 + bounce + breathe, 4, 0, Math.PI * 2);
                         ctx.fill();
-                        ctx.strokeStyle = '#8b5a2b';
+                        ctx.strokeStyle = '#cd7f32';
                         ctx.lineWidth = 2;
                         ctx.stroke();
-                        
-                        // Face
+                        // Cap
+                        ctx.fillStyle = '#3a3530';
+                        ctx.beginPath();
+                        ctx.ellipse(0, -44 + bounce + breathe, 12, 6, 0, Math.PI, Math.PI * 2);
+                        ctx.fill();
+                        // Eyes
                         ctx.fillStyle = '#2a1a10';
                         ctx.beginPath();
-                        ctx.ellipse(-4, -32 + bounce + breathe, 2, 2, 0, 0, Math.PI * 2);
-                        ctx.ellipse(4, -32 + bounce + breathe, 2, 2, 0, 0, Math.PI * 2);
+                        ctx.arc(-4, -33 + bounce + breathe, 2, 0, Math.PI * 2);
+                        ctx.arc(4, -33 + bounce + breathe, 2, 0, Math.PI * 2);
                         ctx.fill();
-                        ctx.fillStyle = '#fff';
-                        ctx.beginPath();
-                        ctx.arc(-3, -33 + bounce + breathe, 0.7, 0, Math.PI * 2);
-                        ctx.arc(5, -33 + bounce + breathe, 0.7, 0, Math.PI * 2);
-                        ctx.fill();
-                        // Mustache
-                        ctx.fillStyle = '#2a1a10';
-                        ctx.beginPath();
-                        ctx.moveTo(-6, -26 + bounce + breathe);
-                        ctx.quadraticCurveTo(0, -24 + bounce + breathe, 6, -26 + bounce + breathe);
-                        ctx.quadraticCurveTo(0, -22 + bounce + breathe, -6, -26 + bounce + breathe);
-                        ctx.fill();
-                        ctx.fillStyle = skinShadow;
-                        ctx.beginPath();
-                        ctx.moveTo(0, -30 + bounce + breathe);
-                        ctx.lineTo(-1.5, -26 + bounce + breathe);
-                        ctx.lineTo(1.5, -26 + bounce + breathe);
-                        ctx.fill();
-                        
-                        // Wrench (weapon)
-                        if (this.isAttacking) {
-                            ctx.save();
-                            ctx.rotate(-Math.PI / 4);
-                            ctx.fillStyle = '#666';
-                            ctx.fillRect(15, -5, 30, 6);
-                            ctx.fillRect(40, -10, 10, 16);
-                            ctx.restore();
+                        // Wrench weapon
+                        if (!this.isAttacking) {
+                            ctx.fillStyle = '#888';
+                            ctx.fillRect(18, -25 + bounce, 5, 40);
+                            ctx.fillRect(16, -30 + bounce, 12, 8);
+                            ctx.fillRect(16, 12 + bounce, 12, 8);
                         }
                         break;
                         
-                    case 3: // 2100s - Cyber Agent
-                        // Legs - sleek suit
-                        ctx.fillStyle = '#1a2a3a';
-                        ctx.fillRect(-8, 10 + bounce, 7, 16);
-                        ctx.fillRect(1, 10 + bounce + (Math.abs(this.vx) > 0.5 ? Math.sin(this.animFrame * Math.PI / 2) * 3 : 0), 7, 16);
-                        // Neon trim
-                        ctx.fillStyle = '#00ffff';
-                        ctx.fillRect(-8, 24 + bounce, 7, 2);
-                        ctx.fillRect(1, 24 + bounce, 7, 2);
+                    case 8: // NEAR FUTURE - Cyber agent with visor
                         // Tech boots
-                        ctx.fillStyle = '#0a1520';
-                        ctx.fillRect(-10, 26 + bounce, 10, 8);
-                        ctx.fillRect(0, 26 + bounce, 10, 8);
-                        // Boot glow
+                        ctx.fillStyle = '#1a2a3a';
+                        ctx.fillRect(-10, 22 + bounce, 10, 12);
+                        ctx.fillRect(0, 22 + bounce, 10, 12);
+                        // Glow strips on boots
                         ctx.fillStyle = '#00ffff';
-                        ctx.shadowColor = '#00ffff';
-                        ctx.shadowBlur = 8;
-                        ctx.fillRect(-8, 32 + bounce, 6, 2);
-                        ctx.fillRect(2, 32 + bounce, 6, 2);
-                        ctx.shadowBlur = 0;
-                        
-                        // Body - tactical suit
+                        ctx.fillRect(-9, 30 + bounce, 8, 2);
+                        ctx.fillRect(1, 30 + bounce, 8, 2);
+                        // Tech pants
+                        ctx.fillStyle = '#0a1520';
+                        ctx.fillRect(-8, 5 + bounce, 7, 18);
+                        ctx.fillRect(1, 5 + bounce, 7, 18);
+                        // Body suit
                         ctx.fillStyle = '#1a2a3a';
                         ctx.beginPath();
-                        ctx.moveTo(-14, -15 + bounce + breathe);
-                        ctx.lineTo(14, -15 + bounce + breathe);
-                        ctx.lineTo(12, 12 + bounce);
-                        ctx.lineTo(-12, 12 + bounce);
-                        ctx.closePath();
+                        ctx.moveTo(-14, -18 + bounce + breathe);
+                        ctx.lineTo(14, -18 + bounce + breathe);
+                        ctx.lineTo(11, 8 + bounce);
+                        ctx.lineTo(-11, 8 + bounce);
                         ctx.fill();
-                        // Neon circuit lines
+                        // Glowing circuits
                         ctx.strokeStyle = '#00ffff';
-                        ctx.lineWidth = 1.5;
-                        ctx.shadowColor = '#00ffff';
-                        ctx.shadowBlur = 5;
+                        ctx.lineWidth = 1;
                         ctx.beginPath();
-                        ctx.moveTo(-10, -12 + bounce + breathe);
-                        ctx.lineTo(-10, 8 + bounce);
-                        ctx.lineTo(0, 8 + bounce);
-                        ctx.moveTo(10, -12 + bounce + breathe);
-                        ctx.lineTo(10, 0 + bounce);
-                        ctx.lineTo(5, 0 + bounce);
+                        ctx.moveTo(-8, -15 + bounce + breathe);
+                        ctx.lineTo(-8, 5 + bounce);
+                        ctx.moveTo(8, -15 + bounce + breathe);
+                        ctx.lineTo(8, 5 + bounce);
+                        ctx.moveTo(-8, -5 + bounce);
+                        ctx.lineTo(8, -5 + bounce);
                         ctx.stroke();
-                        ctx.shadowBlur = 0;
-                        
                         // Arms
                         ctx.fillStyle = '#1a2a3a';
-                        ctx.fillRect(-18, -12 + bounce, 6, 16);
-                        ctx.fillRect(12, -12 + bounce, 6, 16);
-                        ctx.strokeStyle = '#00ffff';
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(-15, -10 + bounce);
-                        ctx.lineTo(-15, 2 + bounce);
-                        ctx.moveTo(15, -10 + bounce);
-                        ctx.lineTo(15, 2 + bounce);
-                        ctx.stroke();
-                        // Tech gloves
+                        ctx.fillRect(-18, -15 + bounce, 6, 18);
+                        ctx.fillRect(12, -15 + bounce, 6, 18);
+                        // Tech gauntlets
                         ctx.fillStyle = '#0a1520';
-                        ctx.beginPath();
-                        ctx.arc(-15, 6 + bounce, 5, 0, Math.PI * 2);
-                        ctx.arc(15, 6 + bounce, 5, 0, Math.PI * 2);
-                        ctx.fill();
-                        
-                        // Neck
-                        ctx.fillStyle = skinTone;
-                        ctx.fillRect(-3, -22 + bounce + breathe, 6, 7);
-                        
+                        ctx.fillRect(-18, 0 + bounce, 6, 8);
+                        ctx.fillRect(12, 0 + bounce, 6, 8);
+                        ctx.fillStyle = '#00ffff';
+                        ctx.fillRect(-17, 2 + bounce, 4, 2);
+                        ctx.fillRect(13, 2 + bounce, 4, 2);
                         // Head
-                        ctx.fillStyle = skinTone;
+                        ctx.fillStyle = '#e8c4a0';
+                        ctx.fillRect(-4, -24 + bounce + breathe, 8, 7);
                         ctx.beginPath();
-                        ctx.ellipse(0, -32 + bounce + breathe, 10, 11, 0, 0, Math.PI * 2);
+                        ctx.ellipse(0, -34 + bounce + breathe, 10, 12, 0, 0, Math.PI * 2);
                         ctx.fill();
-                        
-                        // Cybernetic hair/implants
-                        ctx.fillStyle = '#1a2a3a';
-                        ctx.beginPath();
-                        ctx.ellipse(0, -40 + bounce + breathe, 9, 6, 0, Math.PI, Math.PI * 2);
-                        ctx.fill();
+                        // Cyber visor
                         ctx.fillStyle = '#00ffff';
-                        ctx.fillRect(-8, -42 + bounce + breathe, 2, 4);
-                        ctx.fillRect(6, -42 + bounce + breathe, 2, 4);
-                        
-                        // Visor
-                        ctx.fillStyle = '#00ffff';
-                        ctx.globalAlpha = 0.7;
-                        ctx.fillRect(-9, -36 + bounce + breathe, 18, 5);
-                        ctx.globalAlpha = 1;
-                        ctx.strokeStyle = '#00ffff';
-                        ctx.lineWidth = 1;
-                        ctx.strokeRect(-9, -36 + bounce + breathe, 18, 5);
-                        
-                        // Nose & mouth
-                        ctx.fillStyle = skinShadow;
+                        ctx.shadowColor = '#00ffff';
+                        ctx.shadowBlur = 10;
+                        ctx.fillRect(-12, -38 + bounce + breathe, 24, 6);
+                        ctx.shadowBlur = 0;
+                        // Hair (short, styled)
+                        ctx.fillStyle = '#1a1a2a';
                         ctx.beginPath();
-                        ctx.moveTo(0, -30 + bounce + breathe);
-                        ctx.lineTo(-1.5, -26 + bounce + breathe);
-                        ctx.lineTo(1.5, -26 + bounce + breathe);
+                        ctx.ellipse(0, -42 + bounce + breathe, 10, 6, 0, Math.PI, Math.PI * 2);
                         ctx.fill();
-                        ctx.fillStyle = '#8b5a5a';
-                        ctx.beginPath();
-                        ctx.ellipse(0, -23 + bounce + breathe, 2, 1, 0, 0, Math.PI);
-                        ctx.fill();
-                        
                         // Energy weapon
-                        if (this.canShoot || this.isAttacking) {
-                            ctx.fillStyle = '#0a2030';
-                            ctx.fillRect(16, -6 + bounce, 20, 8);
+                        if (!this.isAttacking) {
+                            ctx.fillStyle = '#1a2a3a';
+                            ctx.fillRect(16, -10 + bounce, 25, 8);
                             ctx.fillStyle = '#00ffff';
                             ctx.shadowColor = '#00ffff';
-                            ctx.shadowBlur = 10;
-                            ctx.beginPath();
-                            ctx.arc(36, -2 + bounce, 4, 0, Math.PI * 2);
-                            ctx.fill();
+                            ctx.shadowBlur = 8;
+                            ctx.fillRect(38, -8 + bounce, 8, 4);
                             ctx.shadowBlur = 0;
                         }
                         break;
                         
-                    case 4: // 2300s - Transcendent Being
-                        const hue = (Date.now() / 20) % 360;
-                        const glowColor = `hsl(${hue}, 70%, 50%)`;
-                        
-                        // Legs - energy form
-                        ctx.fillStyle = '#3a2a5a';
-                        ctx.fillRect(-8, 10 + bounce, 7, 16);
-                        ctx.fillRect(1, 10 + bounce + (Math.abs(this.vx) > 0.5 ? Math.sin(this.animFrame * Math.PI / 2) * 3 : 0), 7, 16);
-                        // Energy trails
-                        ctx.fillStyle = '#bc8cff60';
-                        ctx.fillRect(-10, 24 + bounce, 20, 10);
-                        
-                        // Body - flowing energy form
+                    case 9: // FAR FUTURE - Transcendent being with aura
+                        // Energy lower body
                         ctx.fillStyle = '#3a2a5a';
                         ctx.beginPath();
-                        ctx.moveTo(-14, -15 + bounce + breathe);
-                        ctx.lineTo(14, -15 + bounce + breathe);
-                        ctx.lineTo(12, 12 + bounce);
-                        ctx.lineTo(-12, 12 + bounce);
-                        ctx.closePath();
+                        ctx.moveTo(-10, 5 + bounce);
+                        ctx.lineTo(10, 5 + bounce);
+                        ctx.lineTo(8, 30 + bounce);
+                        ctx.lineTo(-8, 30 + bounce);
                         ctx.fill();
-                        // Shifting color overlay
-                        ctx.fillStyle = glowColor + '40';
+                        // Ethereal glow
+                        ctx.fillStyle = 'rgba(188, 140, 255, 0.3)';
+                        ctx.beginPath();
+                        ctx.ellipse(0, 15 + bounce, 15, 20, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Body (semi-ethereal)
+                        ctx.fillStyle = '#3a2a5a';
+                        ctx.beginPath();
+                        ctx.moveTo(-14, -20 + bounce + breathe);
+                        ctx.lineTo(14, -20 + bounce + breathe);
+                        ctx.lineTo(11, 8 + bounce);
+                        ctx.lineTo(-11, 8 + bounce);
                         ctx.fill();
                         // Energy patterns
                         ctx.strokeStyle = '#bc8cff';
+                        ctx.shadowColor = '#bc8cff';
+                        ctx.shadowBlur = 10;
                         ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.moveTo(-8, -18 + bounce + breathe);
+                        ctx.quadraticCurveTo(0, -10 + bounce, 8, -18 + bounce + breathe);
+                        ctx.moveTo(-6, -8 + bounce);
+                        ctx.quadraticCurveTo(0, 0 + bounce, 6, -8 + bounce);
+                        ctx.stroke();
+                        ctx.shadowBlur = 0;
+                        // Floating arms
+                        ctx.fillStyle = '#3a2a5a';
+                        ctx.beginPath();
+                        ctx.ellipse(-16, -5 + bounce + Math.sin(Date.now() / 300) * 3, 5, 12, -0.3, 0, Math.PI * 2);
+                        ctx.ellipse(16, -5 + bounce + Math.sin(Date.now() / 300 + 1) * 3, 5, 12, 0.3, 0, Math.PI * 2);
+                        ctx.fill();
+                        // Glowing hands
+                        ctx.fillStyle = '#bc8cff';
                         ctx.shadowColor = '#bc8cff';
                         ctx.shadowBlur = 10;
                         ctx.beginPath();
-                        for (let i = 0; i < 5; i++) {
-                            const yOff = Math.sin(Date.now() / 200 + i) * 3;
-                            ctx.moveTo(-10, -10 + i * 5 + bounce + yOff);
-                            ctx.lineTo(10, -10 + i * 5 + bounce + yOff);
-                        }
-                        ctx.stroke();
-                        ctx.shadowBlur = 0;
-                        
-                        // Arms - ethereal
-                        ctx.fillStyle = '#3a2a5a';
-                        ctx.fillRect(-18, -12 + bounce, 6, 18);
-                        ctx.fillRect(12, -12 + bounce, 6, 18);
-                        ctx.fillStyle = glowColor + '60';
-                        ctx.fillRect(-18, -12 + bounce, 6, 18);
-                        ctx.fillRect(12, -12 + bounce, 6, 18);
-                        // Energy hands
-                        ctx.fillStyle = '#bc8cff';
-                        ctx.shadowColor = '#bc8cff';
-                        ctx.shadowBlur = 8;
-                        ctx.beginPath();
-                        ctx.arc(-15, 8 + bounce, 5, 0, Math.PI * 2);
-                        ctx.arc(15, 8 + bounce, 5, 0, Math.PI * 2);
+                        ctx.arc(-16, 8 + bounce + Math.sin(Date.now() / 300) * 3, 5, 0, Math.PI * 2);
+                        ctx.arc(16, 8 + bounce + Math.sin(Date.now() / 300 + 1) * 3, 5, 0, Math.PI * 2);
                         ctx.fill();
                         ctx.shadowBlur = 0;
-                        
-                        // Head - transcendent
-                        ctx.fillStyle = '#3a2a5a';
+                        // Head (elongated, ethereal)
+                        ctx.fillStyle = '#4a3a6a';
                         ctx.beginPath();
-                        ctx.ellipse(0, -32 + bounce + breathe, 11, 13, 0, 0, Math.PI * 2);
+                        ctx.ellipse(0, -38 + bounce + breathe, 10, 16, 0, 0, Math.PI * 2);
                         ctx.fill();
-                        ctx.fillStyle = glowColor + '40';
-                        ctx.fill();
-                        
-                        // Crown of light
+                        // Third eye
                         ctx.fillStyle = '#bc8cff';
                         ctx.shadowColor = '#bc8cff';
                         ctx.shadowBlur = 15;
-                        for (let i = 0; i < 5; i++) {
-                            const angle = -Math.PI / 2 + (i - 2) * 0.4;
-                            const len = 12 + Math.sin(Date.now() / 150 + i) * 3;
-                            ctx.beginPath();
-                            ctx.moveTo(0, -42 + bounce + breathe);
-                            ctx.lineTo(
-                                Math.cos(angle) * len,
-                                -42 + Math.sin(angle) * len + bounce + breathe
-                            );
-                            ctx.lineTo(0, -45 + bounce + breathe);
-                            ctx.fill();
-                        }
-                        ctx.shadowBlur = 0;
-                        
-                        // Multiple eyes
-                        ctx.fillStyle = '#fff';
-                        ctx.shadowColor = '#fff';
-                        ctx.shadowBlur = 5;
                         ctx.beginPath();
-                        ctx.arc(-5, -34 + bounce + breathe, 3, 0, Math.PI * 2);
-                        ctx.arc(5, -34 + bounce + breathe, 3, 0, Math.PI * 2);
-                        ctx.arc(0, -30 + bounce + breathe, 2, 0, Math.PI * 2);
+                        ctx.ellipse(0, -45 + bounce + breathe, 4, 6, 0, 0, Math.PI * 2);
                         ctx.fill();
-                        // Pupils
-                        ctx.fillStyle = '#bc8cff';
+                        // Normal eyes (glowing)
                         ctx.beginPath();
-                        ctx.arc(-5, -34 + bounce + breathe, 1.5, 0, Math.PI * 2);
-                        ctx.arc(5, -34 + bounce + breathe, 1.5, 0, Math.PI * 2);
-                        ctx.arc(0, -30 + bounce + breathe, 1, 0, Math.PI * 2);
+                        ctx.ellipse(-4, -36 + bounce + breathe, 3, 4, 0, 0, Math.PI * 2);
+                        ctx.ellipse(4, -36 + bounce + breathe, 3, 4, 0, 0, Math.PI * 2);
                         ctx.fill();
                         ctx.shadowBlur = 0;
-                        
-                        // Time blade when attacking/powered
-                        if (this.isAttacking || this.canShoot) {
+                        // Floating halo/crown
+                        ctx.strokeStyle = '#bc8cff';
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.ellipse(0, -55 + bounce + breathe + Math.sin(Date.now() / 500) * 2, 12, 4, 0, 0, Math.PI * 2);
+                        ctx.stroke();
+                        // Time blade weapon
+                        if (!this.isAttacking) {
+                            ctx.fillStyle = '#3a2a5a';
+                            ctx.fillRect(18, -30 + bounce, 4, 45);
                             ctx.fillStyle = '#bc8cff';
                             ctx.shadowColor = '#bc8cff';
-                            ctx.shadowBlur = 25;
+                            ctx.shadowBlur = 15;
                             ctx.beginPath();
-                            ctx.moveTo(18, -15 + bounce);
-                            ctx.lineTo(50, -5 + bounce);
-                            ctx.lineTo(50, 5 + bounce);
-                            ctx.lineTo(18, 15 + bounce);
-                            ctx.fill();
-                            ctx.fillStyle = '#fff';
-                            ctx.beginPath();
-                            ctx.moveTo(20, -8 + bounce);
-                            ctx.lineTo(45, 0 + bounce);
-                            ctx.lineTo(20, 8 + bounce);
+                            ctx.moveTo(20, -30 + bounce);
+                            ctx.lineTo(16, -45 + bounce);
+                            ctx.lineTo(24, -45 + bounce);
                             ctx.fill();
                             ctx.shadowBlur = 0;
                         }
@@ -4047,13 +5571,19 @@
             }
             
             getAttackHitbox() {
-                const range = currentLevel >= 1 ? 80 : 50;
+                // Range increases in later eras (after Renaissance at level 5)
+                const range = currentLevel >= 6 ? 80 : 50;
                 return {
                     x: this.facing === 1 ? this.x + this.width : this.x - range,
                     y: this.y,
                     width: range,
                     height: this.height
                 };
+            }
+            
+            // Check if sliding attack should hit
+            isSlideAttacking() {
+                return this.isSliding && this.slideSpeed > 8;
             }
         }
         
@@ -4097,20 +5627,40 @@
                 this.vy += this.gravity;
                 this.y += this.vy;
                 
-                // Platform collision
+                // Platform collision with hill support
+                let onSurface = false;
                 for (let plat of platforms) {
-                    if (this.vy > 0 &&
-                        this.x + this.width > plat.x &&
-                        this.x < plat.x + plat.width &&
-                        this.y + this.height > plat.y &&
-                        this.y + this.height < plat.y + plat.height + this.vy + 5) {
-                        this.y = plat.y - this.height;
-                        this.vy = 0;
+                    if (this.x + this.width > plat.x && this.x < plat.x + plat.width) {
+                        
+                        if (plat.isHill) {
+                            // Hill collision - follow the curve continuously
+                            const enemyCenterX = this.x + this.width / 2;
+                            const hillSurfaceY = plat.getHillYAt(enemyCenterX);
+                            const enemyBottom = this.y + this.height;
+                            
+                            // Snap to hill surface if close enough
+                            if (enemyBottom >= hillSurfaceY - 20 && enemyBottom <= hillSurfaceY + 100) {
+                                if (this.vy >= 0 || enemyBottom >= hillSurfaceY - 5) {
+                                    this.y = hillSurfaceY - this.height;
+                                    this.vy = 0;
+                                    onSurface = true;
+                                }
+                            }
+                        } else {
+                            // Regular platform collision
+                            if (this.vy >= 0 &&
+                                this.y + this.height > plat.y &&
+                                this.y + this.height < plat.y + plat.height + this.vy + 10) {
+                                this.y = plat.y - this.height;
+                                this.vy = 0;
+                                onSurface = true;
+                            }
+                        }
                     }
                 }
                 
-                // Ground
-                if (this.y + this.height > canvas.height - 60) {
+                // Ground collision
+                if (!onSurface && this.y + this.height > canvas.height - 60) {
                     this.y = canvas.height - 60 - this.height;
                     this.vy = 0;
                 }
@@ -4145,32 +5695,32 @@
                 ctx.translate(screenX + this.width / 2, this.y + this.height / 2);
                 if (this.facing === -1) ctx.scale(-1, 1);
                 
-                // Draw based on enemy type
-                switch(this.type) {
-                    case 'bandit':
-                    case 'boar':
-                        this.drawBandit(ctx);
-                        break;
-                    case 'pirate':
-                    case 'soldier':
-                        this.drawSoldier(ctx);
-                        break;
-                    case 'automaton':
-                    case 'boss':
-                        this.drawAutomaton(ctx);
-                        break;
-                    case 'drone':
-                    case 'securityBot':
-                        this.drawDrone(ctx);
-                        break;
-                    case 'alienGuardian':
-                    case 'timeShadow':
-                    case 'temporalWarden':
-                        this.drawAlien(ctx);
-                        break;
-                    default:
-                        ctx.fillStyle = '#f44';
-                        ctx.fillRect(-20, -25, 40, 50);
+                // Draw based on current era for realistic enemies
+                const level = currentLevel;
+                
+                if (level === 0) {
+                    this.drawDinoEnemy(ctx); // Dinosaur Age - small raptor
+                } else if (level === 1) {
+                    this.drawIceAgeEnemy(ctx); // Ice Age - sabertooth/wolf
+                } else if (level === 2) {
+                    this.drawEgyptEnemy(ctx); // Egypt - mummy/jackal warrior
+                } else if (level === 3) {
+                    this.drawGreeceEnemy(ctx); // Greece - skeleton warrior
+                } else if (level === 4) {
+                    this.drawVikingEnemy(ctx); // Viking - draugr/undead
+                } else if (level === 5) {
+                    this.drawBandit(ctx); // Renaissance - bandit
+                } else if (level === 6) {
+                    this.drawSoldier(ctx); // Colonial - redcoat soldier
+                } else if (level === 7) {
+                    this.drawAutomaton(ctx); // Industrial - steam automaton
+                } else if (level === 8) {
+                    this.drawDrone(ctx); // Near future - security drone
+                } else if (level === 9) {
+                    this.drawAlien(ctx); // Far future - time shadow
+                } else {
+                    ctx.fillStyle = '#f44';
+                    ctx.fillRect(-20, -25, 40, 50);
                 }
                 
                 ctx.restore();
@@ -4306,6 +5856,405 @@
                     ctx.arc(0, 0, 40, 0, Math.PI * 2);
                     ctx.stroke();
                 }
+            }
+            
+            drawDinoEnemy(ctx) {
+                // Small raptor/velociraptor
+                const bounce = this.animFrame * 3;
+                
+                // Body - green scales
+                ctx.fillStyle = '#4a6a3a';
+                ctx.beginPath();
+                ctx.ellipse(0, 0, 18, 12, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Tail
+                ctx.beginPath();
+                ctx.moveTo(-15, 0);
+                ctx.quadraticCurveTo(-35, -5 + bounce, -40, 5);
+                ctx.quadraticCurveTo(-35, 10, -15, 5);
+                ctx.fill();
+                
+                // Legs (raptor style)
+                ctx.fillStyle = '#3a5a2a';
+                ctx.fillRect(-5, 10, 5, 12);
+                ctx.fillRect(5, 10, 5, 12);
+                // Clawed feet
+                ctx.fillStyle = '#2a4a1a';
+                ctx.beginPath();
+                ctx.moveTo(-7, 22);
+                ctx.lineTo(-10, 25);
+                ctx.lineTo(-2, 25);
+                ctx.lineTo(0, 22);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(3, 22);
+                ctx.lineTo(0, 25);
+                ctx.lineTo(8, 25);
+                ctx.lineTo(10, 22);
+                ctx.fill();
+                
+                // Head
+                ctx.fillStyle = '#4a6a3a';
+                ctx.beginPath();
+                ctx.ellipse(15, -8, 10, 7, 0.3, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Snout
+                ctx.beginPath();
+                ctx.moveTo(22, -10);
+                ctx.lineTo(32, -6);
+                ctx.lineTo(22, -3);
+                ctx.fill();
+                
+                // Teeth
+                ctx.fillStyle = '#fff';
+                for (let i = 0; i < 4; i++) {
+                    ctx.fillRect(24 + i * 2, -6, 1, 3);
+                }
+                
+                // Eye
+                ctx.fillStyle = '#ff0';
+                ctx.beginPath();
+                ctx.arc(18, -10, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(19, -10, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Arms (small)
+                ctx.fillStyle = '#3a5a2a';
+                ctx.fillRect(8, -2, 8, 4);
+            }
+            
+            drawIceAgeEnemy(ctx) {
+                // Sabertooth cat / dire wolf
+                const bounce = this.animFrame * 2;
+                
+                // Body - gray/brown fur
+                ctx.fillStyle = '#6a5a4a';
+                ctx.beginPath();
+                ctx.ellipse(0, 0, 22, 14, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Fur texture
+                ctx.strokeStyle = '#5a4a3a';
+                ctx.lineWidth = 1;
+                for (let i = 0; i < 6; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(-15 + i * 6, -10);
+                    ctx.lineTo(-15 + i * 6, 10);
+                    ctx.stroke();
+                }
+                
+                // Legs
+                ctx.fillStyle = '#5a4a3a';
+                ctx.fillRect(-12, 10 + bounce, 6, 14);
+                ctx.fillRect(-2, 10, 6, 14);
+                ctx.fillRect(8, 10 + bounce, 6, 14);
+                
+                // Paws
+                ctx.fillStyle = '#4a3a2a';
+                ctx.beginPath();
+                ctx.ellipse(-9, 24 + bounce, 5, 3, 0, 0, Math.PI * 2);
+                ctx.ellipse(1, 24, 5, 3, 0, 0, Math.PI * 2);
+                ctx.ellipse(11, 24 + bounce, 5, 3, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Head
+                ctx.fillStyle = '#7a6a5a';
+                ctx.beginPath();
+                ctx.ellipse(18, -5, 12, 10, 0.2, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Ears
+                ctx.beginPath();
+                ctx.moveTo(15, -15);
+                ctx.lineTo(12, -8);
+                ctx.lineTo(18, -10);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(22, -14);
+                ctx.lineTo(19, -8);
+                ctx.lineTo(25, -9);
+                ctx.fill();
+                
+                // Saber teeth!
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.moveTo(26, 0);
+                ctx.lineTo(24, 12);
+                ctx.lineTo(28, 12);
+                ctx.lineTo(30, 2);
+                ctx.fill();
+                
+                // Snout
+                ctx.fillStyle = '#5a4a3a';
+                ctx.beginPath();
+                ctx.ellipse(28, -2, 6, 5, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Nose
+                ctx.fillStyle = '#2a1a0a';
+                ctx.beginPath();
+                ctx.ellipse(32, -3, 3, 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Eyes
+                ctx.fillStyle = '#4a8aca';
+                ctx.beginPath();
+                ctx.arc(22, -8, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(23, -8, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Tail
+                ctx.fillStyle = '#6a5a4a';
+                ctx.beginPath();
+                ctx.moveTo(-18, -5);
+                ctx.quadraticCurveTo(-30, -10 + bounce, -35, 0);
+                ctx.quadraticCurveTo(-30, 5, -18, 0);
+                ctx.fill();
+            }
+            
+            drawEgyptEnemy(ctx) {
+                // Mummy or Anubis warrior
+                const float = Math.sin(Date.now() / 300) * 2;
+                
+                // Bandaged body
+                ctx.fillStyle = '#c9b896';
+                ctx.fillRect(-12, -15 + float, 24, 40);
+                
+                // Bandage wrapping pattern
+                ctx.strokeStyle = '#a89876';
+                ctx.lineWidth = 2;
+                for (let i = 0; i < 6; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(-12, -10 + i * 8 + float);
+                    ctx.lineTo(12, -10 + i * 8 + float);
+                    ctx.stroke();
+                }
+                
+                // Arms (wrapped)
+                ctx.fillStyle = '#c9b896';
+                ctx.fillRect(-18, -10 + float, 6, 20);
+                ctx.fillRect(12, -10 + float, 6, 20);
+                
+                // Jackal head mask
+                ctx.fillStyle = '#1a1a2a';
+                ctx.beginPath();
+                ctx.ellipse(0, -25 + float, 12, 14, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Snout
+                ctx.beginPath();
+                ctx.moveTo(5, -25 + float);
+                ctx.lineTo(22, -20 + float);
+                ctx.lineTo(22, -15 + float);
+                ctx.lineTo(5, -18 + float);
+                ctx.fill();
+                
+                // Ears (pointed)
+                ctx.beginPath();
+                ctx.moveTo(-5, -35 + float);
+                ctx.lineTo(-10, -45 + float);
+                ctx.lineTo(0, -38 + float);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(5, -35 + float);
+                ctx.lineTo(10, -45 + float);
+                ctx.lineTo(0, -38 + float);
+                ctx.fill();
+                
+                // Gold accents
+                ctx.fillStyle = '#ffd700';
+                ctx.fillRect(-14, -16 + float, 28, 3);
+                ctx.beginPath();
+                ctx.arc(0, -14 + float, 4, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Glowing eyes
+                ctx.fillStyle = '#00ff00';
+                ctx.shadowColor = '#00ff00';
+                ctx.shadowBlur = 8;
+                ctx.beginPath();
+                ctx.arc(-4, -26 + float, 3, 0, Math.PI * 2);
+                ctx.arc(4, -26 + float, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                
+                // Staff
+                ctx.fillStyle = '#ffd700';
+                ctx.fillRect(18, -30 + float, 3, 50);
+                // Ankh on staff
+                ctx.beginPath();
+                ctx.arc(19.5, -35 + float, 5, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.fillRect(17, -30 + float, 5, 10);
+            }
+            
+            drawGreeceEnemy(ctx) {
+                // Skeleton warrior
+                const rattle = this.animFrame * 2;
+                
+                // Ribcage
+                ctx.fillStyle = '#e0d8c8';
+                ctx.fillRect(-10, -12 + rattle, 20, 25);
+                // Ribs
+                ctx.strokeStyle = '#c0b8a8';
+                ctx.lineWidth = 2;
+                for (let i = 0; i < 5; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(-10, -8 + i * 5 + rattle);
+                    ctx.quadraticCurveTo(0, -5 + i * 5 + rattle, 10, -8 + i * 5 + rattle);
+                    ctx.stroke();
+                }
+                
+                // Spine
+                ctx.fillStyle = '#d0c8b8';
+                ctx.fillRect(-2, -12 + rattle, 4, 35);
+                
+                // Pelvis
+                ctx.fillStyle = '#e0d8c8';
+                ctx.beginPath();
+                ctx.ellipse(0, 18 + rattle, 12, 6, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Leg bones
+                ctx.fillRect(-8, 22 + rattle, 4, 16);
+                ctx.fillRect(4, 22 + rattle, 4, 16);
+                
+                // Arm bones
+                ctx.fillRect(-18, -8 + rattle, 8, 4);
+                ctx.fillRect(10, -8 + rattle, 8, 4);
+                ctx.fillRect(-18, -4 + rattle, 4, 14);
+                ctx.fillRect(14, -4 + rattle, 4, 14);
+                
+                // Skull
+                ctx.fillStyle = '#f0e8d8';
+                ctx.beginPath();
+                ctx.ellipse(0, -25 + rattle, 10, 12, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Eye sockets
+                ctx.fillStyle = '#1a1a1a';
+                ctx.beginPath();
+                ctx.ellipse(-4, -27 + rattle, 3, 4, 0, 0, Math.PI * 2);
+                ctx.ellipse(4, -27 + rattle, 3, 4, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Red eye glow
+                ctx.fillStyle = '#ff3333';
+                ctx.shadowColor = '#ff3333';
+                ctx.shadowBlur = 5;
+                ctx.beginPath();
+                ctx.arc(-4, -27 + rattle, 1.5, 0, Math.PI * 2);
+                ctx.arc(4, -27 + rattle, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                
+                // Nose hole
+                ctx.fillStyle = '#1a1a1a';
+                ctx.beginPath();
+                ctx.moveTo(0, -23 + rattle);
+                ctx.lineTo(-2, -20 + rattle);
+                ctx.lineTo(2, -20 + rattle);
+                ctx.fill();
+                
+                // Teeth
+                ctx.fillStyle = '#f0e8d8';
+                ctx.fillRect(-6, -17 + rattle, 12, 3);
+                
+                // Greek helmet (damaged)
+                ctx.fillStyle = '#8a7a5a';
+                ctx.beginPath();
+                ctx.arc(0, -30 + rattle, 12, Math.PI, 0);
+                ctx.fill();
+                
+                // Sword
+                ctx.fillStyle = '#a0a0a0';
+                ctx.fillRect(20, -25 + rattle, 3, 35);
+                ctx.fillStyle = '#8a7a5a';
+                ctx.fillRect(18, -2 + rattle, 7, 6);
+            }
+            
+            drawVikingEnemy(ctx) {
+                // Draugr (undead Viking)
+                const sway = Math.sin(Date.now() / 400) * 2;
+                
+                // Rotting body
+                ctx.fillStyle = '#4a5a5a';
+                ctx.fillRect(-12, -15 + sway, 24, 35);
+                
+                // Tattered chainmail
+                ctx.fillStyle = '#606060';
+                for (let y = 0; y < 4; y++) {
+                    for (let x = 0; x < 5; x++) {
+                        ctx.beginPath();
+                        ctx.arc(-10 + x * 5, -12 + y * 8 + sway, 2, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+                
+                // Arms
+                ctx.fillStyle = '#4a5a5a';
+                ctx.fillRect(-20, -12 + sway, 8, 20);
+                ctx.fillRect(12, -12 + sway, 8, 20);
+                
+                // Skeletal hands
+                ctx.fillStyle = '#8a9a9a';
+                ctx.beginPath();
+                ctx.arc(-16, 10 + sway, 5, 0, Math.PI * 2);
+                ctx.arc(16, 10 + sway, 5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Legs (armored)
+                ctx.fillStyle = '#3a4a4a';
+                ctx.fillRect(-10, 18 + sway, 8, 15);
+                ctx.fillRect(2, 18 + sway, 8, 15);
+                
+                // Head (partially skeletal)
+                ctx.fillStyle = '#5a6a6a';
+                ctx.beginPath();
+                ctx.ellipse(0, -28 + sway, 11, 13, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Exposed skull parts
+                ctx.fillStyle = '#8a9a9a';
+                ctx.beginPath();
+                ctx.arc(6, -30 + sway, 6, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Viking helmet (damaged)
+                ctx.fillStyle = '#707070';
+                ctx.beginPath();
+                ctx.arc(0, -35 + sway, 12, Math.PI, 0);
+                ctx.fill();
+                // Nose guard
+                ctx.fillRect(-2, -35 + sway, 4, 12);
+                
+                // Glowing blue eyes
+                ctx.fillStyle = '#4af';
+                ctx.shadowColor = '#4af';
+                ctx.shadowBlur = 10;
+                ctx.beginPath();
+                ctx.arc(-4, -30 + sway, 3, 0, Math.PI * 2);
+                ctx.arc(4, -30 + sway, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                
+                // Rusty axe
+                ctx.fillStyle = '#5a4a3a';
+                ctx.fillRect(20, -30 + sway, 4, 45);
+                ctx.fillStyle = '#8a7a6a';
+                ctx.beginPath();
+                ctx.moveTo(24, -25 + sway);
+                ctx.quadraticCurveTo(38, -20 + sway, 35, -10 + sway);
+                ctx.lineTo(24, -15 + sway);
+                ctx.fill();
             }
             
             takeDamage(amount) {
@@ -4609,6 +6558,49 @@
                 this.moveDir = 1;
             }
             
+            // Get slope angle at a given x position on the hill
+            getSlopeAt(worldX) {
+                if (!this.isHill) return 0;
+                
+                // Position on hill (0 to 1)
+                const t = (worldX - this.x) / this.width;
+                if (t < 0 || t > 1) return 0;
+                
+                // For quadratic bezier, derivative of Y with respect to t
+                const baseY = this.y + this.height;
+                const controlY = this.y - this.height * 0.3;
+                // Y(t) = (1-t)²*baseY + 2*(1-t)*t*controlY + t²*baseY
+                // dY/dt = -2(1-t)*baseY + 2*(1-2t)*controlY + 2t*baseY
+                //       = 2*baseY*(-1+t+t) + 2*controlY*(1-2t)
+                //       = 2*baseY*(2t-1) + 2*controlY*(1-2t)
+                //       = 2*(2t-1)*(baseY - controlY)
+                const slope = 2 * (2*t - 1) * (baseY - controlY) / this.width;
+                return slope;
+            }
+            
+            // Get Y position on hill surface at given X - matches quadraticCurveTo visual EXACTLY
+            getHillYAt(worldX) {
+                if (!this.isHill) return this.y + this.height;
+                
+                const t = (worldX - this.x) / this.width;
+                if (t < 0 || t > 1) return this.y + this.height;
+                
+                // quadraticCurveTo(cpX, cpY, endX, endY) from current point
+                // Start point: (0, baseY) where baseY = this.y + this.height
+                // Control point: (width/2, controlY) where controlY = this.y - this.height * 0.3
+                // End point: (width, baseY)
+                
+                // Quadratic Bezier formula: B(t) = (1-t)²*P0 + 2*(1-t)*t*P1 + t²*P2
+                const baseY = this.y + this.height;
+                const controlY = this.y - this.height * 0.3;
+                
+                // Y(t) = (1-t)²*baseY + 2*(1-t)*t*controlY + t²*baseY
+                const oneMinusT = 1 - t;
+                const hillY = oneMinusT * oneMinusT * baseY + 2 * oneMinusT * t * controlY + t * t * baseY;
+                
+                return hillY;
+            }
+            
             update() {
                 if (this.moving) {
                     this.x += this.moveSpeed * this.moveDir;
@@ -4753,7 +6745,7 @@
             
             // Generate regular enemies (NO boss in initial spawn - boss comes after clearing)
             const enemyTypes = era.enemies.filter(e => e !== 'boss' && e !== 'temporalWarden');
-            const enemyCount = 15; // Fixed at 15 enemies to clear
+            const enemyCount = 12; // Ground enemies
             
             for (let i = 0; i < enemyCount; i++) {
                 const x = 400 + Math.random() * (levelWidth - 600);
@@ -4762,12 +6754,42 @@
                 enemies.push(new Enemy(x, y, type));
             }
             
-            // Add hill platforms along the ground for terrain variety
+            // Add hill platforms along the ground for terrain variety - MASSIVE HILLS (300% scale)
+            const hillPlatforms = [];
             for (let i = 0; i < 12; i++) {
-                const hillX = 500 + i * (levelWidth - 800) / 12 + (Math.random() - 0.5) * 100;
-                const hillWidth = 150 + Math.random() * 100;
-                const hillHeight = 30 + Math.random() * 50;
-                platforms.push(new Platform(hillX, groundY - hillHeight, hillWidth, hillHeight + 10, false, true)); // true = hill style
+                const hillX = 300 + i * (levelWidth - 400) / 12 + (Math.random() - 0.5) * 100;
+                const hillWidth = 500 + Math.random() * 400;   // 300% bigger: 500-900px wide
+                const hillHeight = 180 + Math.random() * 240;  // 300% taller: 180-420px tall
+                // Hill y is top of bounding box, height is the full height
+                // Base of hill (at edges) will be at y + height = groundY
+                const hill = new Platform(hillX, groundY - hillHeight, hillWidth, hillHeight, false, true);
+                platforms.push(hill);
+                hillPlatforms.push(hill);
+            }
+            
+            // Add enemies on some hills (they will walk on the hill surface)
+            for (let i = 0; i < 5; i++) {
+                const hill = hillPlatforms[Math.floor(Math.random() * hillPlatforms.length)];
+                const x = hill.x + hill.width * 0.3 + Math.random() * hill.width * 0.4;
+                const hillY = hill.getHillYAt(x);
+                const type = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+                const enemy = new Enemy(x, hillY - 50, type);
+                enemy.patrolStart = hill.x + 50;
+                enemy.patrolEnd = hill.x + hill.width - 50;
+                enemies.push(enemy);
+            }
+            
+            // Add enemies on elevated platforms
+            const elevatedPlatforms = platforms.filter(p => !p.isHill && p.y < groundY - 80 && p.width > 60);
+            for (let i = 0; i < Math.min(6, elevatedPlatforms.length); i++) {
+                const plat = elevatedPlatforms[i];
+                const x = plat.x + plat.width / 2;
+                const y = plat.y - 50;
+                const type = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+                const enemy = new Enemy(x, y, type);
+                enemy.patrolStart = plat.x + 10;
+                enemy.patrolEnd = plat.x + plat.width - 10;
+                enemies.push(enemy);
             }
             
             // Generate collectibles
@@ -4804,7 +6826,20 @@
             
             // Update UI
             container.className = era.theme;
-            document.getElementById('eraDisplay').textContent = `${era.year}s - ${era.name}`;
+            // Format year display (handle negative years like -65000000 BC)
+            let yearDisplay;
+            if (era.year < 0) {
+                if (era.year <= -1000000) {
+                    yearDisplay = `${Math.abs(era.year / 1000000)}M BC`;
+                } else if (era.year <= -1000) {
+                    yearDisplay = `${Math.abs(era.year)}BC`;
+                } else {
+                    yearDisplay = `${Math.abs(era.year)} BC`;
+                }
+            } else {
+                yearDisplay = `${era.year}s`;
+            }
+            document.getElementById('eraDisplay').textContent = `${yearDisplay} - ${era.name}`;
             updateHealthUI();
             updateKeysUI();
             updateLivesUI();
@@ -5977,8 +8012,87 @@
             if (state === GameState.PLAYING) {
                 update();
                 render();
+            } else if (state === GameState.MENU || state === GameState.GAMEOVER || state === GameState.VICTORY) {
+                // Render animated background for menu screens
+                renderMenuBackground();
             }
             requestAnimationFrame(gameLoop);
+        }
+        
+        function renderMenuBackground() {
+            // Draw an animated time-vortex background on the canvas
+            ctx.fillStyle = '#0a0a15';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            const time = Date.now() / 1000;
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            
+            // Time vortex spirals
+            for (let ring = 0; ring < 8; ring++) {
+                const radius = 50 + ring * 60 + Math.sin(time + ring) * 20;
+                const alpha = 0.15 - ring * 0.015;
+                
+                ctx.strokeStyle = `rgba(188, 140, 255, ${alpha})`;
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                for (let i = 0; i < 60; i++) {
+                    const angle = (i / 60) * Math.PI * 2 + time * 0.5 + ring * 0.5;
+                    const r = radius + Math.sin(angle * 3 + time * 2) * 15;
+                    const x = centerX + Math.cos(angle) * r;
+                    const y = centerY + Math.sin(angle) * r * 0.6;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                ctx.stroke();
+            }
+            
+            // Floating era symbols
+            const eraColors = ['#7cb342', '#4fc3f7', '#ffd700', '#ffffff', '#c0c0c0', '#8B4513', '#4a6fa5', '#cd7f32', '#00ffff', '#bc8cff'];
+            const eraSymbols = ['🦖', '🦣', '☥', '⚔', '🪓', '🏰', '⚓', '⚙', '🤖', '✨'];
+            
+            for (let i = 0; i < 10; i++) {
+                const angle = (i / 10) * Math.PI * 2 + time * 0.2;
+                const radius = 200 + Math.sin(time * 0.5 + i) * 30;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius * 0.5;
+                const scale = 0.8 + Math.sin(time + i) * 0.2;
+                
+                ctx.font = `${24 * scale}px Arial`;
+                ctx.fillStyle = eraColors[i];
+                ctx.globalAlpha = 0.4 + Math.sin(time * 2 + i) * 0.2;
+                ctx.fillText(eraSymbols[i], x - 12, y + 8);
+            }
+            ctx.globalAlpha = 1;
+            
+            // Twinkling stars
+            for (let i = 0; i < 50; i++) {
+                const starX = (Math.sin(i * 127.1) * 0.5 + 0.5) * canvas.width;
+                const starY = (Math.cos(i * 311.7) * 0.5 + 0.5) * canvas.height;
+                const twinkle = Math.sin(time * 3 + i * 17) * 0.5 + 0.5;
+                
+                ctx.fillStyle = `rgba(255, 255, 255, ${twinkle * 0.5})`;
+                ctx.beginPath();
+                ctx.arc(starX, starY, 1 + twinkle, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Time stream particles
+            for (let i = 0; i < 20; i++) {
+                const px = ((time * 50 + i * 100) % canvas.width);
+                const py = (Math.sin(i * 7.3) * 0.5 + 0.5) * canvas.height;
+                const alpha = 0.3 + Math.sin(time + i) * 0.2;
+                
+                ctx.fillStyle = `rgba(188, 140, 255, ${alpha})`;
+                ctx.beginPath();
+                ctx.arc(px, py, 2, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Trail
+                ctx.fillStyle = `rgba(188, 140, 255, ${alpha * 0.3})`;
+                ctx.fillRect(px - 30, py - 1, 30, 2);
+            }
         }
         
         function update() {
@@ -6131,6 +8245,9 @@
                     const playerFalling = player.vy > 0;
                     const stompZone = playerBottom <= enemyTop + 20 && playerBottom >= enemyTop - 5;
                     
+                    // Check if player is slide attacking (sliding fast on a hill)
+                    const isSlideAttack = player.isSliding && player.slideSpeed > 8;
+                    
                     if (playerFalling && stompZone) {
                         // STOMP! Kill the enemy
                         enemy.dead = true;
@@ -6144,11 +8261,31 @@
                         floatingTexts.push({
                             x: enemy.x + enemy.width / 2,
                             y: enemy.y,
-                            text: "AHHHHHH THAT HURT!",
+                            text: "STOMP!",
                             life: 1,
                             vy: -2,
                             color: '#ff4444'
                         });
+                    } else if (isSlideAttack) {
+                        // SLIDE ATTACK! Kill the enemy
+                        enemy.dead = true;
+                        score += 200; // Bonus for slide kills
+                        updateScoreUI();
+                        sound.playEnemyDeath(currentLevel);
+                        createParticle(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#ffff00', 20);
+                        
+                        // Create slide kill text
+                        floatingTexts.push({
+                            x: enemy.x + enemy.width / 2,
+                            y: enemy.y,
+                            text: "SLIDE KILL!",
+                            life: 1,
+                            vy: -2,
+                            color: '#ffff00'
+                        });
+                        
+                        // Screen shake for slide kill
+                        screenShake = 8;
                     } else if (!player.invincible) {
                         // Player takes damage from side/bottom collision
                         if (player.takeDamage()) {
@@ -6726,37 +8863,50 @@
         // ============================================
         
         function startGame(level = 0) {
-            currentLevel = level;
-            score = 0;
-            lives = 3;
-            generateLevel(currentLevel);
-            updateScoreUI();
-            updateLivesUI();
-            updateHealthUI();
-            updateKeysUI();
-            
-            document.getElementById('titleScreen').classList.add('hidden');
-            document.getElementById('levelSelect').classList.add('hidden');
-            document.getElementById('pauseMenu').classList.add('hidden');
-            document.getElementById('gameOver').classList.add('hidden');
-            document.getElementById('victory').classList.add('hidden');
-            
-            // Show UI panels
-            const uiElement = document.getElementById('ui');
-            uiElement.style.display = 'flex';
-            uiElement.style.visibility = 'visible';
-            uiElement.style.opacity = '1';
-            
-            // Ensure both panels are visible
-            document.getElementById('leftPanel').style.display = 'block';
-            document.getElementById('rightPanel').style.display = 'block';
-            
-            // Show touch controls on mobile
-            if ('ontouchstart' in window) {
-                document.getElementById('touchControls').style.display = 'flex';
+            try {
+                // Initialize sound if not already
+                if (!soundInitialized) {
+                    sound.init();
+                    soundInitialized = true;
+                }
+                
+                // Stop menu music
+                sound.stopMusic();
+                
+                currentLevel = level;
+                score = 0;
+                lives = 3;
+                generateLevel(currentLevel);
+                updateScoreUI();
+                updateLivesUI();
+                updateHealthUI();
+                updateKeysUI();
+                
+                document.getElementById('titleScreen').classList.add('hidden');
+                document.getElementById('levelSelect').classList.add('hidden');
+                document.getElementById('pauseMenu').classList.add('hidden');
+                document.getElementById('gameOver').classList.add('hidden');
+                document.getElementById('victory').classList.add('hidden');
+                
+                // Show UI panels
+                const uiElement = document.getElementById('ui');
+                uiElement.style.display = 'flex';
+                uiElement.style.visibility = 'visible';
+                uiElement.style.opacity = '1';
+                
+                // Ensure both panels are visible
+                document.getElementById('leftPanel').style.display = 'block';
+                document.getElementById('rightPanel').style.display = 'block';
+                
+                // Show touch controls on mobile
+                if ('ontouchstart' in window) {
+                    document.getElementById('touchControls').style.display = 'flex';
+                }
+                
+                state = GameState.PLAYING;
+            } catch (e) {
+                console.error('Error starting game:', e);
             }
-            
-            state = GameState.PLAYING;
         }
         
         function pauseGame() {
@@ -6791,7 +8941,19 @@
                 const warpYear = document.getElementById('warpYear');
                 
                 warpScreen.classList.remove('hidden');
-                warpYear.textContent = ERAS[currentLevel + 1].year;
+                // Format year for time warp display
+                const nextEra = ERAS[currentLevel + 1];
+                let warpYearDisplay;
+                if (nextEra.year < 0) {
+                    if (nextEra.year <= -1000000) {
+                        warpYearDisplay = `${Math.abs(nextEra.year / 1000000)} MILLION BC`;
+                    } else {
+                        warpYearDisplay = `${Math.abs(nextEra.year)} BC`;
+                    }
+                } else {
+                    warpYearDisplay = nextEra.year;
+                }
+                warpYear.textContent = warpYearDisplay;
                 
                 sound.stopMusic();
                 sound.playTimeWarp();
@@ -6835,9 +8997,20 @@
             ERAS.forEach((era, i) => {
                 const btn = document.createElement('button');
                 btn.className = 'level-btn ' + (unlockedLevels[i] ? 'unlocked' : 'locked');
+                // Format year display for level select
+                let yearDisplay;
+                if (era.year < 0) {
+                    if (era.year <= -1000000) {
+                        yearDisplay = `${Math.abs(era.year / 1000000)}M BC`;
+                    } else {
+                        yearDisplay = `${Math.abs(era.year)} BC`;
+                    }
+                } else {
+                    yearDisplay = `${era.year}s`;
+                }
                 btn.innerHTML = `
                     <div class="era">${i + 1}</div>
-                    <div class="year">${era.year}s</div>
+                    <div class="year">${yearDisplay}</div>
                 `;
                 if (unlockedLevels[i]) {
                     btn.onclick = () => startGame(i);
