@@ -6719,29 +6719,29 @@
                 platforms.push(new Platform(x, y, width, 20, moving));
             }
             
-            // Add stepping stone platforms (smaller, for jumping)
+            // Add stepping stone platforms (smaller, for jumping) - keep these reachable
             for (let i = 0; i < 15; i++) {
                 const x = 300 + i * (levelWidth - 600) / 15 + (Math.random() - 0.5) * 80;
-                const y = groundY - 180 - Math.random() * 150;
+                const y = groundY - 120 - Math.random() * 120; // Max 240 above ground (reachable)
                 platforms.push(new Platform(x, y, 50 + Math.random() * 40, 15));
             }
             
-            // Add high platforms for aerial navigation
+            // Add medium-high platforms for aerial navigation (reachable with double jump)
             for (let i = 0; i < 8; i++) {
                 const x = 400 + i * (levelWidth - 800) / 8;
-                const y = groundY - 350 - Math.random() * 80;
+                const y = groundY - 200 - Math.random() * 60; // Max 260 above ground
                 platforms.push(new Platform(x, y, 100 + Math.random() * 60, 18));
             }
             
             // Add boss arena platforms (at the start of the level where boss fight happens)
-            // These help during the boss fight
-            platforms.push(new Platform(100, groundY - 120, 120, 20)); // Left low
-            platforms.push(new Platform(350, groundY - 180, 100, 20)); // Center left
-            platforms.push(new Platform(550, groundY - 140, 110, 20)); // Center right
-            platforms.push(new Platform(200, groundY - 280, 90, 18)); // Left high
-            platforms.push(new Platform(450, groundY - 300, 100, 18)); // Center high
-            platforms.push(new Platform(650, groundY - 240, 80, 18)); // Right high
-            platforms.push(new Platform(300, groundY - 380, 120, 18)); // Very high center
+            // These help during the boss fight - all reachable with double jump
+            platforms.push(new Platform(100, groundY - 100, 120, 20)); // Left low
+            platforms.push(new Platform(350, groundY - 150, 100, 20)); // Center left
+            platforms.push(new Platform(550, groundY - 120, 110, 20)); // Center right
+            platforms.push(new Platform(200, groundY - 200, 90, 18)); // Left mid
+            platforms.push(new Platform(450, groundY - 220, 100, 18)); // Center mid
+            platforms.push(new Platform(650, groundY - 180, 80, 18)); // Right mid
+            platforms.push(new Platform(300, groundY - 260, 120, 18)); // High center (reachable from mid platforms)
             
             // Generate regular enemies (NO boss in initial spawn - boss comes after clearing)
             const enemyTypes = era.enemies.filter(e => e !== 'boss' && e !== 'temporalWarden');
@@ -6779,10 +6779,20 @@
                 enemies.push(enemy);
             }
             
-            // Add enemies on elevated platforms
-            const elevatedPlatforms = platforms.filter(p => !p.isHill && p.y < groundY - 80 && p.width > 60);
-            for (let i = 0; i < Math.min(6, elevatedPlatforms.length); i++) {
-                const plat = elevatedPlatforms[i];
+            // Add enemies on elevated platforms - ONLY on reachable ones (not too high)
+            // Max reachable height is about 250px above ground (double jump + some margin)
+            const maxReachableHeight = groundY - 280;
+            const reachablePlatforms = platforms.filter(p => 
+                !p.isHill && 
+                p.y >= maxReachableHeight && // Not too high
+                p.y < groundY - 80 && // But elevated
+                p.width > 70 // Wide enough to patrol
+            );
+            
+            // Only add a few platform enemies on reachable platforms
+            const platformEnemyCount = Math.min(4, reachablePlatforms.length);
+            for (let i = 0; i < platformEnemyCount; i++) {
+                const plat = reachablePlatforms[i];
                 const x = plat.x + plat.width / 2;
                 const y = plat.y - 50;
                 const type = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
@@ -8930,8 +8940,8 @@
             // Prevent multiple calls
             if (state === GameState.TRANSITION || state === GameState.VICTORY) return;
             
-            if (currentLevel < 4) {
-                // Unlock next level
+            if (currentLevel < 9) {
+                // Unlock next level (we have 10 levels: 0-9)
                 unlockedLevels[currentLevel + 1] = true;
                 localStorage.setItem('echoesUnlocked', JSON.stringify(unlockedLevels));
                 
@@ -8965,7 +8975,7 @@
                     state = GameState.PLAYING;
                 }, 3000);
             } else {
-                // Victory! Beat the final boss
+                // Victory! Beat all 10 eras including the final boss
                 state = GameState.VICTORY;
                 document.getElementById('victoryScore').textContent = score;
                 document.getElementById('victory').classList.remove('hidden');
