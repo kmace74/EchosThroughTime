@@ -19,3 +19,24 @@ ButtonActionLeft Stick / D-PadMoveA / CrossJumpX / YAttackB / CircleTennis BallS
 ✅ Mobile browsers (iOS Safari, Android Chrome)
 ✅ Gamepad controllers (Xbox, PlayStation, generic USB)
 ✅ Touch screens
+
+Credits Screen
+Click "VIEW CREDITS" to see:
+
+Game title and subtitle
+Game Design: Kevin & Claude
+Programming: Claude (Anthropic AI)
+Art Direction: Kevin
+Music & Sound: Procedurally Generated
+All 10 eras listed with emojis
+Special thanks message
+© 2026
+
+Stats Tracked Throughout Game:
+
+Enemy kills (attack & ground pound)
+Collectibles gathered
+Boss defeats
+Deaths
+Ground pounds used
+Time per era
