@@ -445,6 +445,185 @@
             margin-bottom: 30px;
         }
         
+        /* Victory Highlights */
+        #victoryHighlights {
+            background: linear-gradient(180deg, #0a0a1a 0%, #1a1a3a 50%, #0a0a2a 100%);
+            overflow: hidden;
+        }
+        
+        .highlights-container {
+            width: 90%;
+            max-width: 800px;
+            height: 85%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .highlights-container h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 28px;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255,215,0,0.5);
+            margin-bottom: 20px;
+        }
+        
+        .highlights-scroll {
+            flex: 1;
+            width: 100%;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .era-highlight {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .era-highlight-name {
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            color: #ffd700;
+            margin-bottom: 8px;
+        }
+        
+        .era-highlight-stat {
+            font-size: 12px;
+            color: #aaa;
+            margin: 4px 0;
+        }
+        
+        .era-highlight-stat span {
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .highlights-totals {
+            background: rgba(255,215,0,0.1);
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            padding: 15px 30px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .totals-title {
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+        
+        .totals-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .total-stat {
+            text-align: center;
+        }
+        
+        .total-stat-value {
+            font-size: 24px;
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .total-stat-label {
+            font-size: 11px;
+            color: #aaa;
+            text-transform: uppercase;
+        }
+        
+        /* Credits Screen */
+        #creditsScreen {
+            background: linear-gradient(180deg, #0a0a1a 0%, #1a0a2a 50%, #0a0a1a 100%);
+            overflow: hidden;
+        }
+        
+        .credits-container {
+            width: 90%;
+            max-width: 600px;
+            height: 85%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .credits-scroll {
+            flex: 1;
+            width: 100%;
+            overflow-y: auto;
+            text-align: center;
+            padding: 20px;
+            animation: creditsScroll 30s linear infinite;
+        }
+        
+        @keyframes creditsScroll {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-20px); }
+        }
+        
+        .credits-title {
+            font-family: 'Cinzel', serif;
+            font-size: 36px;
+            color: #ffd700;
+            text-shadow: 0 0 30px rgba(255,215,0,0.5);
+            margin-bottom: 10px;
+        }
+        
+        .credits-subtitle {
+            font-size: 16px;
+            color: #aaa;
+            letter-spacing: 4px;
+            margin-bottom: 40px;
+        }
+        
+        .credits-section {
+            margin-bottom: 30px;
+        }
+        
+        .credits-heading {
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            color: #888;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+        }
+        
+        .credits-name {
+            font-size: 18px;
+            color: #fff;
+            margin: 5px 0;
+        }
+        
+        .credits-era {
+            font-size: 14px;
+            color: #bc8cff;
+            margin: 8px 0;
+        }
+        
+        .credits-final {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,215,0,0.3);
+        }
+        
+        .credits-year {
+            font-size: 14px;
+            color: #666;
+            margin-top: 20px;
+        }
+        
         /* Pause Menu */
         #pauseMenu {
             background: rgba(0,0,0,0.85);
@@ -563,7 +742,78 @@
         <div class="screen hidden" id="victory">
             <h2>TIME MASTERED</h2>
             <div class="final-score">Final Score: <span id="victoryScore">0</span></div>
+            <button class="menu-btn" id="showHighlightsBtn">VIEW JOURNEY HIGHLIGHTS</button>
             <button class="menu-btn" id="victoryMenuBtn">MAIN MENU</button>
+        </div>
+        
+        <!-- Victory Highlights -->
+        <div class="screen hidden" id="victoryHighlights">
+            <div class="highlights-container">
+                <h2>YOUR JOURNEY THROUGH TIME</h2>
+                <div class="highlights-scroll" id="highlightsContent">
+                    <!-- Dynamically filled -->
+                </div>
+                <div class="highlights-totals" id="highlightsTotals">
+                    <!-- Dynamically filled -->
+                </div>
+                <button class="menu-btn" id="showCreditsBtn">VIEW CREDITS</button>
+            </div>
+        </div>
+        
+        <!-- Credits Screen -->
+        <div class="screen hidden" id="creditsScreen">
+            <div class="credits-container">
+                <div class="credits-scroll" id="creditsContent">
+                    <div class="credits-title">ECHOES THROUGH TIME</div>
+                    <div class="credits-subtitle">A Journey Across 65 Million Years</div>
+                    
+                    <div class="credits-section">
+                        <div class="credits-heading">GAME DESIGN</div>
+                        <div class="credits-name">Kevin & Claude</div>
+                    </div>
+                    
+                    <div class="credits-section">
+                        <div class="credits-heading">PROGRAMMING</div>
+                        <div class="credits-name">Claude (Anthropic AI)</div>
+                    </div>
+                    
+                    <div class="credits-section">
+                        <div class="credits-heading">ART DIRECTION</div>
+                        <div class="credits-name">Kevin</div>
+                    </div>
+                    
+                    <div class="credits-section">
+                        <div class="credits-heading">MUSIC & SOUND</div>
+                        <div class="credits-name">Procedurally Generated</div>
+                    </div>
+                    
+                    <div class="credits-section">
+                        <div class="credits-heading">ERAS FEATURED</div>
+                        <div class="credits-era">🦖 Dinosaur Age - 65 Million BC</div>
+                        <div class="credits-era">🦣 Ice Age - 10,000 BC</div>
+                        <div class="credits-era">🏛️ Ancient Egypt - 3000 BC</div>
+                        <div class="credits-era">⚔️ Ancient Greece - 500 BC</div>
+                        <div class="credits-era">🛡️ Viking Age - 800 AD</div>
+                        <div class="credits-era">🎨 Renaissance - 1500 AD</div>
+                        <div class="credits-era">⚓ Colonial Age - 1700 AD</div>
+                        <div class="credits-era">⚙️ Industrial Era - 1900 AD</div>
+                        <div class="credits-era">🤖 Near Future - 2100 AD</div>
+                        <div class="credits-era">✨ Far Future - 2300 AD</div>
+                    </div>
+                    
+                    <div class="credits-section">
+                        <div class="credits-heading">SPECIAL THANKS</div>
+                        <div class="credits-name">To all Time Travelers</div>
+                        <div class="credits-name">who dared to journey through the ages</div>
+                    </div>
+                    
+                    <div class="credits-final">
+                        <div class="credits-heading">THANK YOU FOR PLAYING!</div>
+                        <div class="credits-year">© 2026</div>
+                    </div>
+                </div>
+                <button class="menu-btn" id="creditsMenuBtn">MAIN MENU</button>
+            </div>
         </div>
         
         <!-- Pause Menu -->
@@ -1789,6 +2039,51 @@
         let keysCollected = 0;
         let unlockedLevels = JSON.parse(localStorage.getItem('echoesUnlocked')) || [true, false, false, false, false, false, false, false, false, false];
         
+        // Game stats tracking for victory highlights
+        let gameStats = {
+            totalEnemiesKilled: 0,
+            totalCollectibles: 0,
+            totalBossesDefeated: 0,
+            totalDeaths: 0,
+            totalGroundPounds: 0,
+            totalSlideKills: 0,
+            gameStartTime: 0,
+            eraStats: [] // Stats per era
+        };
+        
+        function initGameStats() {
+            gameStats = {
+                totalEnemiesKilled: 0,
+                totalCollectibles: 0,
+                totalBossesDefeated: 0,
+                totalDeaths: 0,
+                totalGroundPounds: 0,
+                totalSlideKills: 0,
+                gameStartTime: Date.now(),
+                eraStats: []
+            };
+            for (let i = 0; i < 10; i++) {
+                gameStats.eraStats[i] = {
+                    enemiesKilled: 0,
+                    collectibles: 0,
+                    bossDefeated: false,
+                    deaths: 0,
+                    completionTime: 0,
+                    startTime: 0
+                };
+            }
+        }
+        
+        function startEraTimer() {
+            gameStats.eraStats[currentLevel].startTime = Date.now();
+        }
+        
+        function endEraTimer() {
+            if (gameStats.eraStats[currentLevel].startTime > 0) {
+                gameStats.eraStats[currentLevel].completionTime = Date.now() - gameStats.eraStats[currentLevel].startTime;
+            }
+        }
+        
         // Boss system
         let levelBoss = null;
         let bossSpawned = false;
@@ -2123,6 +2418,9 @@
                     // After death animation, trigger level completion
                     if (this.deathTimer > 180) {
                         bossDefeated = true;
+                        gameStats.totalBossesDefeated++;
+                        gameStats.eraStats[currentLevel].bossDefeated = true;
+                        endEraTimer();
                         // Automatically complete the level
                         completeLevel();
                     }
@@ -4545,6 +4843,10 @@
                         score += 100;
                         killCount++;
                         
+                        // Track stats
+                        gameStats.totalEnemiesKilled++;
+                        gameStats.eraStats[currentLevel].enemiesKilled++;
+                        
                         // Death particles for each enemy
                         for (let i = 0; i < 10; i++) {
                             particles.push({
@@ -4571,6 +4873,7 @@
                 });
                 
                 if (killCount > 0) {
+                    gameStats.totalGroundPounds++;
                     updateScoreUI();
                     sound.playEnemyDeath(currentLevel);
                 }
@@ -8216,6 +8519,8 @@
                             lives--;
                             updateLivesUI();
                             if (lives <= 0) {
+                                gameStats.totalDeaths++;
+                                gameStats.eraStats[currentLevel].deaths++;
                                 gameOver();
                             } else {
                                 player.x = 100;
@@ -8322,6 +8627,8 @@
                         
                         if (enemy.takeDamage(1)) {
                             score += 100;
+                            gameStats.totalEnemiesKilled++;
+                            gameStats.eraStats[currentLevel].enemiesKilled++;
                             updateScoreUI();
                             sound.playEnemyDeath(currentLevel);
                             createParticle(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, ERAS[currentLevel].colors.accent, 15);
@@ -8434,6 +8741,8 @@
                         updateKeysUI();
                         sound.playCollect(true);
                         createParticle(c.x, c.y, '#ffd700', 20);
+                        gameStats.totalCollectibles++;
+                        gameStats.eraStats[currentLevel].collectibles++;
                     } else if (c.type === 'health') {
                         // Health pickup - restore 1 health
                         if (player.health < player.maxHealth) {
@@ -8462,6 +8771,8 @@
                         updateScoreUI();
                         sound.playCollect(false);
                         createParticle(c.x, c.y, ERAS[currentLevel].colors.accent, 8);
+                        gameStats.totalCollectibles++;
+                        gameStats.eraStats[currentLevel].collectibles++;
                     }
                 }
             });
@@ -8886,6 +9197,13 @@
                 currentLevel = level;
                 score = 0;
                 lives = 3;
+                
+                // Initialize game stats if starting from beginning
+                if (level === 0) {
+                    initGameStats();
+                }
+                startEraTimer();
+                
                 generateLevel(currentLevel);
                 updateScoreUI();
                 updateLivesUI();
@@ -8897,6 +9215,8 @@
                 document.getElementById('pauseMenu').classList.add('hidden');
                 document.getElementById('gameOver').classList.add('hidden');
                 document.getElementById('victory').classList.add('hidden');
+                document.getElementById('victoryHighlights').classList.add('hidden');
+                document.getElementById('creditsScreen').classList.add('hidden');
                 
                 // Show UI panels
                 const uiElement = document.getElementById('ui');
@@ -8971,6 +9291,7 @@
                 setTimeout(() => {
                     warpScreen.classList.add('hidden');
                     currentLevel++;
+                    startEraTimer();
                     generateLevel(currentLevel);
                     state = GameState.PLAYING;
                 }, 3000);
@@ -8991,6 +9312,8 @@
             document.getElementById('pauseMenu').classList.add('hidden');
             document.getElementById('gameOver').classList.add('hidden');
             document.getElementById('victory').classList.add('hidden');
+            document.getElementById('victoryHighlights').classList.add('hidden');
+            document.getElementById('creditsScreen').classList.add('hidden');
             document.getElementById('ui').style.display = 'none';
             sound.stopMusic();
             sound.startMenuMusic();
@@ -9041,6 +9364,83 @@
         document.getElementById('resumeBtn').onclick = resumeGame;
         document.getElementById('pauseMenuBtn').onclick = showMenu;
         document.getElementById('victoryMenuBtn').onclick = showMenu;
+        document.getElementById('showHighlightsBtn').onclick = showVictoryHighlights;
+        document.getElementById('showCreditsBtn').onclick = showCredits;
+        document.getElementById('creditsMenuBtn').onclick = showMenu;
+        
+        // ============================================
+        // VICTORY HIGHLIGHTS & CREDITS
+        // ============================================
+        
+        function formatTime(ms) {
+            const seconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${minutes}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function showVictoryHighlights() {
+            document.getElementById('victory').classList.add('hidden');
+            document.getElementById('victoryHighlights').classList.remove('hidden');
+            
+            // Generate highlights content
+            const content = document.getElementById('highlightsContent');
+            content.innerHTML = '';
+            
+            const eraEmojis = ['🦖', '🦣', '🏛️', '⚔️', '🛡️', '🎨', '⚓', '⚙️', '🤖', '✨'];
+            
+            ERAS.forEach((era, i) => {
+                const stats = gameStats.eraStats[i];
+                const card = document.createElement('div');
+                card.className = 'era-highlight';
+                card.innerHTML = `
+                    <div class="era-highlight-name">${eraEmojis[i]} ${era.name}</div>
+                    <div class="era-highlight-stat">Enemies: <span>${stats.enemiesKilled}</span></div>
+                    <div class="era-highlight-stat">Items: <span>${stats.collectibles}</span></div>
+                    <div class="era-highlight-stat">Time: <span>${formatTime(stats.completionTime)}</span></div>
+                    <div class="era-highlight-stat">Boss: <span>${stats.bossDefeated ? '✅' : '❌'}</span></div>
+                `;
+                content.appendChild(card);
+            });
+            
+            // Generate totals
+            const totals = document.getElementById('highlightsTotals');
+            const totalTime = gameStats.eraStats.reduce((sum, s) => sum + s.completionTime, 0);
+            totals.innerHTML = `
+                <div class="totals-title">JOURNEY TOTALS</div>
+                <div class="totals-grid">
+                    <div class="total-stat">
+                        <div class="total-stat-value">${gameStats.totalEnemiesKilled}</div>
+                        <div class="total-stat-label">Enemies Defeated</div>
+                    </div>
+                    <div class="total-stat">
+                        <div class="total-stat-value">${gameStats.totalCollectibles}</div>
+                        <div class="total-stat-label">Items Collected</div>
+                    </div>
+                    <div class="total-stat">
+                        <div class="total-stat-value">${gameStats.totalBossesDefeated}</div>
+                        <div class="total-stat-label">Bosses Beaten</div>
+                    </div>
+                    <div class="total-stat">
+                        <div class="total-stat-value">${gameStats.totalGroundPounds}</div>
+                        <div class="total-stat-label">Ground Pounds</div>
+                    </div>
+                    <div class="total-stat">
+                        <div class="total-stat-value">${formatTime(totalTime)}</div>
+                        <div class="total-stat-label">Total Time</div>
+                    </div>
+                    <div class="total-stat">
+                        <div class="total-stat-value">${score}</div>
+                        <div class="total-stat-label">Final Score</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function showCredits() {
+            document.getElementById('victoryHighlights').classList.add('hidden');
+            document.getElementById('creditsScreen').classList.remove('hidden');
+        }
         
         // ============================================
         // INITIALIZE
